@@ -1,0 +1,406 @@
+import cv2
+import matplotlib.pyplot as plt
+from skimage import io
+from skimage.util import img_as_float, random_noise, img_as_ubyte
+from skimage.restoration import estimate_sigma
+from PIL import Image, ImageFilter
+from scipy.fft import fft2, ifft2, fftshift, ifftshift
+import numpy as np
+from numpy import pi, sin, exp
+
+# 显示两幅图像的函数
+def display_image(image_list, title_list):
+    for i in range(2):
+        plt.subplot(1, 2, i + 1)
+        plt.imshow(image_list[i], 'gray')
+        plt.title(title_list[i])
+        plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
+lena = io.imread("lena.bmp", as_gray=True)
+lena = img_as_float(lena)
+
+
+# 为lena图像添加高斯噪声,均值为0.1,方差为0.1
+lenaGaussianNoise = random_noise(lena, mode='gaussian', mean=0.1, var=0.1)
+images = [lena, lenaGaussianNoise]
+titles = ['original image', 'Gaussian noise mean=0.1, var=0.1']
+display_image(images, titles)
+
+# 为lena图像添加高斯噪声,均值为0.5,方差为0.05
+lenaGaussianNoise = random_noise(lena, mode='gaussian', mean=0.5, var=0.05)
+images = [lena, lenaGaussianNoise]
+titles = ['original image', 'Gaussian noise mean=0.5, var=0.05']
+display_image(images, titles)
+
+# 为lena图像添加高斯噪声,均值为0.1,方差为0.05
+lenaGaussianNoise = random_noise(lena, mode='gaussian', mean=0.1, var=0.05)
+images = [lena, lenaGaussianNoise]
+titles = ['original image', 'Gaussian noise mean=0.1, var=0.05']
+display_image(images, titles)
+
+
+lenaGaussianNoiseCV = img_as_ubyte(lenaGaussianNoise)
+# 调用OpenCV的高斯平滑cv2.GaussianBlur进行滤波
+# 高斯核尺寸为11x11,高斯核标准差为1.5
+lenaGaussian = cv2.GaussianBlur(lenaGaussianNoiseCV, ksize=(11, 11), sigmaX=1.5)
+images = [lenaGaussianNoiseCV, lenaGaussian]
+titles = ['Gaussian noise image', 'filtered by Gaussian']
+display_image(images, titles)
+
+
+# 调用OpenCV的中值滤波cv2.medianBlur进行滤波,核尺寸为5x5
+lenaMedian = cv2.medianBlur(lenaGaussianNoiseCV, ksize=5)
+images = [lenaGaussianNoiseCV, lenaMedian]
+titles = ['Gaussian noise image', 'filtered by median filter']
+display_image(images, titles)
+
+# 调用OpenCV的算术平均值滤波cv2.blur进行滤波,核尺寸为5x5
+lenaMean = cv2.blur(lenaGaussianNoiseCV, ksize=(5, 5))
+images = [lenaGaussianNoiseCV, lenaMean]
+titles = ['Gaussian noise image', 'filtered by arithmetic mean filter']
+display_image(images, titles)
+
+
+# 将lenaGaussianNoiseCV转换为浮点数格
+CVF = lenaGaussianNoiseCV.astype(float)
+
+# 将像素值大于1e-10的值保留,否则赋值1e-10,防止log10(0)错误
+prob_tmp = np.where(CVF > 1.0e-10, CVF, 1.0e-10)
+
+# 取上面数组的log10值,小于1e-10的值赋值-1000
+result = np.where(CVF > 1.0e-10, np.log10(prob_tmp), -1000)
+
+# 对log结果进行3x3的几何平均滤波,再取指数还原为像素值
+lenaGeometricMean = np.uint8(np.exp(cv2.boxFilter(result, ddepth=-1, ksize=(3, 3))))
+images = [lenaGaussianNoiseCV, lenaGeometricMean]
+titles = ['Gaussian noise image', 'filtered by geometric mean filter']
+display_image(images, titles)
+
+
+
+# 为lena图像添加椒盐噪声,噪声比例为0.2,盐与椒的比例为1:1
+lenaSPNoise = random_noise(lena, mode='s&p', amount=0.2, salt_vs_pepper=0.5)
+images = [lena, lenaSPNoise]
+titles = ['original image', 'salt and pepper noise']
+display_image(images, titles)
+
+
+# 将椒盐噪声图像转换为无符号8位整数格式
+lenaSPNoiseCV = img_as_ubyte(lenaSPNoise)
+
+# 调用OpenCV的高斯平滑cv2.GaussianBlur进行滤波
+# 高斯核尺寸为5x5,高斯核标准差为1.5
+lenaSPGaussian = cv2.GaussianBlur(lenaSPNoiseCV, ksize=(11,11), sigmaX=1.5)
+images = [lenaSPNoiseCV, lenaSPGaussian]
+titles = ['salt and pepper noise image', 'filtered by Gaussian filter']
+display_image(images, titles)
+
+
+# 将lenaGaussianNoiseCV转换为浮点数格
+CVF = lenaSPNoiseCV.astype(float)
+
+# 将像素值大于1e-10的值保留,否则赋值1e-10,防止log10(0)错误
+prob_tmp = np.where(CVF > 1.0e-10, CVF, 1.0e-10)
+
+# 取上面数组的log10值,小于1e-10的值赋值-1000
+result = np.where(CVF > 1.0e-10, np.log10(prob_tmp), -1000)
+
+# 对log结果进行3x3的几何平均滤波,再取指数还原为像素值
+lenaGeometricMean = np.uint8(np.exp(cv2.boxFilter(result, ddepth=-1, ksize=(3, 3))))
+images = [lenaGaussianNoiseCV, lenaGeometricMean]
+titles = ['salt and pepper noise image', 'filtered by geometric mean filter']
+display_image(images, titles)
+
+
+
+# 调用OpenCV算术平均值滤波cv2.blur,核尺寸为5x5
+lenaSPMean = cv2.blur(lenaSPNoiseCV, ksize=(5, 5))
+images = [lenaSPNoiseCV, lenaSPMean]
+titles = ['salt and pepper noise image', 'filtered by arithmetic mean filter']
+display_image(images, titles)
+
+# 调用OpenCV中值滤波cv2.medianBlur,核尺寸为3x3
+lenaSPMedian = cv2.medianBlur(lenaSPNoiseCV, ksize=3)
+images = [lenaSPNoiseCV, lenaSPMedian]
+titles = ['salt and pepper noise image', 'filtered by median filter']
+display_image(images, titles)
+
+
+# 将lenaSPNoiseCV转换为PIL Image格式
+lenaSPNoisePIL = Image.fromarray(lenaSPNoiseCV)
+
+# 调用PIL最大值滤波ImageFilter.MaxFilter,核尺寸为3x3
+lenaSPMax = lenaSPNoisePIL.filter(ImageFilter.MaxFilter(size=3))
+images = [lenaSPNoiseCV, lenaSPMax]
+titles = ['salt and pepper noise image', 'filtered by max filter']
+display_image(images, titles)
+
+
+# 调用PIL最小值滤波ImageFilter.MinFilter,核尺寸为3x3
+lenaSPMin = lenaSPNoisePIL.filter(ImageFilter.MinFilter(size=3))
+images = [lenaSPNoiseCV, lenaSPMin]
+titles = ['salt and pepper noise image', 'filtered by min filter']
+display_image(images, titles)
+
+
+# 用于椒盐噪声去噪,使用反谐波均值滤波器
+
+# 用于计算给定图像的反谐波均值
+# 输入参数:image为输入图像,size为滤波器尺寸,Q为反谐波参数
+def contra_harmonic_mean(image, size, Q):
+    # 计算分子部分
+    numerator = np.power(image+1e-10, Q + 1)
+
+    # 计算分母部分
+    denominator = np.power(image+1e-10, Q)
+
+    # 创建一个给定size形状的全1核
+    kernel = np.full(size, 1.0)
+
+    # 对分子和分母分别进行卷积运算, 再将分子卷积结果除以分母卷积结果
+    ret = cv2.filter2D(numerator, -1, kernel) / cv2.filter2D(denominator, -1, kernel)
+    return ret
+
+# 对椒盐噪声图像应用不同Q值的反谐波均值滤波
+lenaSPContra1 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=0.5)
+lenaSPContra2 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=0)
+lenaSPContra3 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=-0.5)
+
+images = [lenaSPNoiseCV, lenaSPContra1, lenaSPContra2, lenaSPContra3]
+titles = ['salt and pepper noise image', 'contra-harmonic filter Q=0.5',
+          'contra-harmonic filter Q=0', 'contra-harmonic filter Q=-0.5']
+for i in range(4):
+    plt.subplot(2, 2, i + 1)
+    plt.imshow(images[i], 'gray')
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.show()
+
+lenaSPContra1 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=1.5)
+lenaSPContra2 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=0)
+lenaSPContra3 = contra_harmonic_mean(lenaSPNoise, size=(3, 3), Q=-1.5)
+
+images = [lenaSPNoiseCV, lenaSPContra1, lenaSPContra2, lenaSPContra3]
+titles = ['salt and pepper noise image', 'contra-harmonic filter Q=1.5',
+          'contra-harmonic filter Q=0', 'contra-harmonic filter Q=-1.5']
+for i in range(4):
+    plt.subplot(2, 2, i + 1)
+    plt.imshow(images[i], 'gray')
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.show()
+
+# 定义了一个函数my_blur_function,用于对图像进行模糊处理
+# 输入参数:img为输入图像,t为模糊参数,a和b为退化函数的参数
+def my_blur_function(img, t, a, b):
+    base_space = np.zeros(img.shape[:2], dtype='complex_')
+    rows, columns = img.shape[:2]
+    for u in range(rows):
+        for v in range(columns):
+            x = u - rows / 2
+            y = v - columns / 2
+            val = pi * (x * a + y * b)
+            if val == 0:
+                val = 1
+            base_space[u, v] = (t / val) * sin(val) * exp(-1j * val)
+    # 对输入图像进行二维傅里叶变换,并进行频谱平移
+    centered = fftshift(fft2(img))
+
+    # 将平移后的频谱与基函数值相乘
+    pass_center = centered * base_space
+
+    # 对乘积结果进行反傅里叶变换,并取实部作为最终的模糊图像
+    passed = ifft2(ifftshift(pass_center)).real
+    return passed
+
+
+lena = cv2.imread("lena.bmp", cv2.IMREAD_GRAYSCALE)
+
+# 对lena图像应用my_blur_function函数,使用参数t=1,a=0.1,b=0.1,得到模糊图像lenaBlur
+lenaBlur = my_blur_function(lena, t=1, a=0.1, b=0.1)
+images = [lena, lenaBlur]
+titles = ['original image', 'blurred image']
+display_image(images, titles)
+
+# 向模糊图像添加高斯噪声
+lenaBlur = ((lenaBlur - lenaBlur.min()) * (1/(lenaBlur.max() - lenaBlur.min()) * 255)).astype('uint8')
+
+# 向归一化后的lenaBlur图像添加均值为0,方差为0.01的高斯噪声,结果存储在lenaGB中
+lenaGB = random_noise(lenaBlur, mode='gaussian', mean=0, var=0.01)
+images = [lenaBlur, lenaGB]
+titles = ['blurred image', 'add Gaussian noise']
+display_image(images, titles)
+
+lenaGB = img_as_ubyte(lenaGB)
+
+
+# 定义了一个函数my_wiener_filter,用于对图像进行维纳滤波
+# 输入参数:img为输入图像,t,a,b为退化函数参数,k为维纳滤波参数
+def my_wiener_filter(img, t, a, b, k):
+    h = np.zeros(img.shape[:2], dtype='complex_')
+    rows, columns = img.shape[:2]
+    for u in range(rows):
+        for v in range(columns):
+            x = u - rows / 2
+            y = v - columns / 2
+            val = pi * (x * a + y * b)
+            if val == 0:
+                val = 1
+            h[u, v] = (t / val) * sin(val) * exp(-1j * val)
+    centered = fftshift(fft2(img))
+
+    # 创建一个与输入图像相同大小的复数数组, 用于存储滤波结果
+    pass_center = np.zeros(img.shape[:2], dtype='complex_')
+    for u in range(rows):
+        for v in range(columns):
+            # 根据维纳滤波公式计算pass_center中的值
+            pass_center[u, v] = ((1 / h[u, v]) * (abs(h[u, v])) ** 2 / ((abs(h[u, v])) ** 2 + k)) * centered[u, v]
+
+    # 对pass_center进行反傅里叶变换,并取实部作为滤波结果
+    passed = ifft2(ifftshift(pass_center)).real
+    passed = ((passed - passed.min()) * (1 / (passed.max() - passed.min()) * 255)).astype('uint8')
+
+    # 返回维纳滤波后的图像
+    return passed
+
+
+
+# 加载原始图像
+
+lena = io.imread("lena.bmp", as_gray=True)
+# 计算原始图像的方差作为sigma_image^2
+sigma_image2 = np.var(lena)
+
+
+# 添加高斯噪声,均值为0,方差为10
+sigma_noise2 = 10
+
+
+# 计算k
+k = sigma_noise2 / sigma_image2
+
+print(f"图像方差sigma_image^2 = {sigma_image2}")
+print(f"噪声方差sigma_noise^2 = {sigma_noise2}")
+print(f"k = sigma_noise^2 / sigma_image^2 = {k}")
+
+
+lenaWiener = my_wiener_filter(lenaGB, t=1, a=0.1, b=0.1, k=0.1)
+images = [lenaGB, lenaWiener]
+titles = ['blurred and add Gaussian noise', 'filtered by Wiener k=0.1']
+display_image(images, titles)
+
+lenaWiener = my_wiener_filter(lenaGB, t=1, a=0.1, b=0.1, k=0.05)
+images = [lenaGB, lenaWiener]
+titles = ['blurred and add Gaussian noise', 'filtered by Wiener k=0.05']
+display_image(images, titles)
+
+lenaWiener = my_wiener_filter(lenaGB, t=1, a=0.1, b=0.1, k=0.01)
+images = [lenaGB, lenaWiener]
+titles = ['blurred and add Gaussian noise', 'filtered by Wiener k=0.01']
+display_image(images, titles)
+
+lenaWiener = my_wiener_filter(lenaGB, t=1, a=0.1, b=0.1, k=k)
+images = [lenaGB, lenaWiener]
+titles = ['blurred and add Gaussian noise', 'filtered by Wiener k=0.00358']
+display_image(images, titles)
+
+# 实现约束最小二乘滤波器
+
+# 定义了一个函数zero_pad,用于对图像进行零填充
+# 输入参数:image为输入图像,shape为填充后的形状,position为填充的位置('corner'或'center')
+def zero_pad(image, shape, position='corner'):
+    shape = np.asarray(shape, dtype=int)
+    imshape = np.asarray(image.shape, dtype=int)
+
+    # 如果输入图像的形状与目标形状相同,直接返回输入图像
+    if np.all(imshape == shape):
+        return image
+
+    if np.any(shape <= 0):
+        raise ValueError("ZERO_PAD: null or negative shape given")
+
+    dshape = shape - imshape
+    if np.any(dshape < 0):
+        raise ValueError("ZERO_PAD: target size smaller than source one")
+
+    pad_img = np.zeros(shape, dtype=image.dtype)
+
+    idx, idy = np.indices(imshape)
+
+    # 根据position参数,计算填充的偏移量
+    if position == 'center':
+        if np.any(dshape % 2 != 0):
+            raise ValueError("ZERO_PAD: source and target shapes ""have different parity.")
+        offx, offy = dshape // 2
+    else:
+        offx, offy = (0, 0)
+
+    # 将输入图像复制到pad_img的指定位置
+    pad_img[idx + offx, idy + offy] = image
+
+    # 返回填充后的图像
+    return pad_img
+
+# 定义了一个函数psf2otf,用于计算点扩散函数(PSF)的傅里叶变换(OTF)
+# 输入参数:psf为点扩散函数,shape为输出OTF的大小
+def psf2otf(psf, shape):
+    if np.all(psf == 0):
+        return np.zeros_like(psf)
+
+    inshape = psf.shape
+
+    psf = zero_pad(psf, shape, position='corner')
+
+    # 对PSF进行循环平移,使其中心位于数组的原点
+    for axis, axis_size in enumerate(inshape):
+        psf = np.roll(psf, -int(axis_size / 2), axis=axis)
+
+    # 计算PSF的二维傅里叶变换,得到OTF
+    otf = np.fft.fft2(psf)
+
+    n_ops = np.sum(psf.size * np.log2(psf.shape))
+    otf = np.real_if_close(otf, tol=n_ops)
+
+    return otf
+
+# 定义拉普拉斯算子的核,用于计算图像的二阶导数
+LAPLACIAN = np.array([[0, -1,  0], [-1,  4, -1], [0, -1,  0]])
+
+# 定义了一个函数my_constrained_least_squares_filter,用于对图像进行约束最小二乘滤波
+# 输入参数:img为输入图像,t,a,b为退化函数参数,g为正则化参数
+def my_constrained_least_squares_filter(img, t, a, b, g):
+    h = np.zeros(img.shape[:2], dtype='complex_')
+    rows, columns = img.shape[:2]
+    for u in range(rows):
+        for v in range(columns):
+            x = u - rows / 2
+            y = v - columns / 2
+            val = pi * (x * a + y * b)
+            if val == 0:
+                val = 1
+            h[u, v] = (t / val) * sin(val) * exp(-1j * val)
+
+    # 对输入图像进行二维傅里叶变换,并进行频谱平移
+    centered = fftshift(fft2(img))
+
+    # 创建一个与输入图像相同大小的复数数组,用于存储滤波结果
+    pass_center = np.zeros(img.shape[:2], dtype='complex_')
+
+    # 计算拉普拉斯算子的OTF
+    laplace = psf2otf(LAPLACIAN, (rows, columns))
+    for u in range(rows):
+        for v in range(columns):
+            # 根据约束最小二乘滤波公式计算pass_center中的值
+            pass_center[u, v] = (h[u, v].conj() / ((abs(h[u, v])) ** 2 + g * abs(laplace[u, v]) ** 2)) * centered[u, v]
+    # 对pass_center进行反傅里叶变换,并取实部作为滤波结果
+    passed = ifft2(ifftshift(pass_center)).real
+    passed = ((passed - passed.min()) * (1 / (passed.max() - passed.min()) * 255)).astype('uint8')
+    return passed
+
+# 对lenaGB图像应用my_constrained_least_squares_filter函数,使用参数t=1,a=0.1,b=0.1,g=0.001,得到约束最小二乘滤波结果lenaLSF
+lenaLSF = my_constrained_least_squares_filter(lenaGB, t=1, a=0.1, b=0.1, g=0.001)
+images = [lenaGB, lenaLSF]
+titles = ['blurred and add Gaussian noise', 'constrained least squares filter']
+display_image(images, titles)

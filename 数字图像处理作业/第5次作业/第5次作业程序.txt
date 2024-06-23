@@ -1,0 +1,306 @@
+import cv2
+from skimage import io
+import numpy as np
+from numpy.linalg import norm
+from scipy.signal.windows import gaussian
+from scipy.fftpack import fft2, ifft2, fftshift, ifftshift
+from math import exp, dist
+import matplotlib.pyplot as plt
+
+# 计算功率谱比
+# 定义函数 calc_spectral_ratio,用于计算滤波后的频谱能量与原始频谱能量的比值。
+# 该函数接受两个参数:未滤波的频谱(fft_shifted)和滤波后的频谱(fft_filtered),返回它们的功率谱比。
+def calc_spectral_ratio(fft_shifted, fft_filtered):
+    return (norm(fft_filtered) ** 2) / (norm(fft_shifted) ** 2)
+
+def unsharp_frequency_filter(img, d0, k1, k2):
+    base_space = np.zeros(img.shape[:2])
+    rows, columns = img.shape[:2]
+    center_point = (rows / 2, columns / 2)
+
+    # 这个嵌套循环用于构建锐化滤波器的空间域表示(base_space)。
+    # 对于每个像素点,计算其与图像中心点的欧几里得距离,并使用一个高斯函数及系数k1和k2计算该点的滤波器系数。
+    for x in range(columns):
+        for y in range(rows):
+            base_space[y, x] = k1 + k2 * (1 - exp(((-dist((y, x), center_point) ** 2) / (2 * (d0 ** 2)))))
+
+    # 接下来的步骤与高斯滤波函数相似,计算输入图像的二维离散傅里叶变换,
+    # 将其与构建的锐化滤波器相乘,得到滤波后的频谱。
+    # 然后对滤波后的频谱进行逆傅里叶变换,得到滤波后的图像。
+    # 最后,返回滤波后的图像。
+    centered = fftshift(fft2(img))
+    pass_center = centered * base_space
+    passed = ifft2(ifftshift(pass_center)).real
+    return passed
+
+# 高斯滤波
+# 定义函数 gaussian_frequency_filter,用于对图像进行高斯低通或高通滤波。
+# 该函数接受三个参数:输入图像(img)、截止频率(d0)和一个布尔值(is_lowpass),指定是进行低通滤波还是高通滤波。
+
+def gaussian_frequency_filter(img, d0, is_lowpass=True):
+    # 函数首先创建一个与输入图像大小相同的零矩阵(base_space),并计算图像的中心点坐标(center_point)。
+    base_space = np.zeros(img.shape[:2])
+    rows, columns = img.shape[:2]
+    center_point = (rows / 2, columns / 2)
+
+
+    # 这个嵌套循环用于构建高斯滤波器的空间域表示(base_space)。
+    # 对于每个像素点,计算其与图像中心点的欧几里得距离,并根据是进行低通滤波还是高通滤波,使用高斯函数计算该点的滤波器系数。
+    for x in range(columns):
+        for y in range(rows):
+            if is_lowpass is True:
+                base_space[y, x] = exp(((-dist((y, x), center_point) ** 2) / (2 * (d0 ** 2))))
+            else:
+                base_space[y, x] = 1 - exp(((-dist((y, x), center_point) ** 2) / (2 * (d0 ** 2))))
+
+    # 计算输入图像的二维离散傅里叶变换(centered), 将其与构建的高斯滤波器(base_space)相乘,
+    # 得到滤波后的频谱(pass_center)。然后对滤波后的频谱进行逆傅里叶变换, 得到滤波后的图像(passed)。最后, 调用之前定义的calc_spectral_ratio
+    # 函数计算功率谱比(ratio), 并返回滤波后的图像和功率谱比。
+    centered = fftshift(fft2(img))
+    pass_center = centered * base_space
+    passed = ifft2(ifftshift(pass_center)).real
+    ratio = calc_spectral_ratio(centered, pass_center)
+    return passed, ratio
+
+
+# 这是另一种实现高斯低通滤波的方法,它利用傅里叶变换的卷积定理。
+# 首先,使用 gaussian 函数生成一个二维高斯核(kernel)。
+# 然后,计算输入图像(img)和滤波核的傅里叶变换,它们的乘积就是卷积在频域的表示(convolution)。
+# 最后,对卷积结果进行逆傅里叶变换,获得滤波后的图像(output_img)。
+# 该函数返回归一化后的输出图像。
+def alternative_gaussian_filter(img, std):
+    kernel = np.outer(gaussian(img.shape[0], std), gaussian(img.shape[1], std))
+    freq = fft2(img)
+    freq_kernel = fft2(ifftshift(kernel))
+    convolution = freq * freq_kernel
+
+    output_img = ifft2(convolution).real
+    output_img = output_img * 255 / np.max(output_img)
+    return output_img
+
+
+# 巴特沃斯滤波
+# 定义函数 butterworth_frequency_filter,用于对图像进行巴特沃斯低通或高通滤波。
+# 该函数接受四个参数:输入图像(img)、截止频率(d0)、阶数(order)和一个布尔值(is_lowpass),
+# 指定是进行低通滤波还是高通滤波。函数的前几行与高斯滤波函数相似,创建一个零矩阵(base_space)并计算图像中心点坐标(center_point)。
+def butterworth_frequency_filter(img, d0, order, is_lowpass=True):
+    base_space = np.zeros(img.shape[:2])
+    rows, columns = img.shape[:2]
+    center_point = (rows / 2, columns / 2)
+
+    # 这个嵌套循环用于构建巴特沃斯滤波器的空间域表示(base_space)。
+    # 对于每个像素点,计算其与图像中心点的欧几里得距离,并根据是进行低通滤波还是高通滤波,
+    # 使用巴特沃斯函数计算该点的滤波器系数。
+    for x in range(columns):
+        for y in range(rows):
+            if is_lowpass is True:
+                base_space[y, x] = 1 / (1 + (dist((y, x), center_point) / d0) ** (2 * order))
+            else:
+                base_space[y, x] = 1 - (1 / (1 + (dist((y, x), center_point) / d0) ** (2 * order)))
+
+
+    # 接下来的步骤与高斯滤波函数相同,计算输入图像的二维离散傅里叶变换,将其与构建的巴特沃斯滤波器相乘,得到滤波后的频谱。
+    # 然后对滤波后的频谱进行逆傅里叶变换,得到滤波后的图像。
+    # 最后,调用 calc_spectral_ratio 函数计算功率谱比,并返回滤波后的图像和功率谱比。
+    centered = fftshift(fft2(img))
+    pass_center = centered * base_space
+    passed = ifft2(ifftshift(pass_center)).real
+    ratio = calc_spectral_ratio(centered, pass_center)
+    return passed, ratio
+
+
+# 拉普拉斯高通滤波
+# 定义函数 laplacian_frequency_filter,用于对图像进行拉普拉斯高通滤波。
+# 该函数接受一个参数:输入图像(img)。
+# 函数首先创建一个与输入图像大小相同的零矩阵(base_space),并计算图像的中心点坐标(center_point)。
+def laplacian_frequency_filter(img):
+    base_space = np.zeros(img.shape[:2])
+    rows, columns = img.shape[:2]
+    center_point = (rows / 2, columns / 2)
+
+    # 这个嵌套循环用于构建拉普拉斯滤波器的空间域表示(base_space)。
+    # 对于每个像素点,计算其与图像中心点的欧几里得距离的平方,并乘以一个常数。
+    for x in range(columns):
+        for y in range(rows):
+            base_space[y, x] = -4 * (np.pi ** 2) * (dist((y, x), center_point) ** 2)
+
+    # 接下来的步骤与高斯滤波函数相似, 计算输入图像的二维离散傅里叶变换,
+    # 将其与构建的拉普拉斯滤波器相乘, 得到滤波后的频谱。
+    # 然后对滤波后的频谱进行逆傅里叶变换, 得到滤波后的图像。
+    # 最后, 返回滤波后的图像。
+    centered = fftshift(fft2(img))
+    pass_center = centered * base_space
+    passed = ifft2(ifftshift(pass_center)).real
+    return passed
+
+# 显示两幅图像的函数
+def display_image(image_list, title_list):
+    for i in range(2):
+        plt.subplot(1, 2, i + 1)
+        plt.imshow(image_list[i], 'gray')
+        plt.title(title_list[i])
+        plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
+# 显示频谱的函数
+# 定义函数 magnitude_spectrum,用于计算并显示图像的频谱幅值。
+# 该函数接受一个参数:输入图像(img)。函数首先使用 OpenCV 的 dft 函数计算图像的二维离散傅里叶变换,
+# 然后对结果进行平移(dft_shift)。接下来,使用 OpenCV 的 magnitude 函数计算频谱的幅值,并进行对数变换以改善可视化效果。
+# 最后,返回处理后的频谱数据。
+def magnitude_spectrum(img):
+    img_dft = cv2.dft(np.float32(img), flags=cv2.DFT_COMPLEX_OUTPUT)
+    dft_shift = np.fft.fftshift(img_dft)
+    spectrum = 20 * np.log10(cv2.magnitude(dft_shift[:, :, 0], dft_shift[:, :, 1]) + 1)  # +1是为了显示更为清晰
+    return spectrum
+
+
+
+#  test1 Gaussian Lowpass Filter
+test1 = io.imread("test1.pgm", as_gray=True)
+test1GaussianLowpass, ratioGaussianLowpassTest1 = gaussian_frequency_filter(test1, d0=50, is_lowpass=True)
+print(ratioGaussianLowpassTest1)
+images = [test1, test1GaussianLowpass]
+titles = ['test1', 'test1 Gaussian Lowpass']
+display_image(images, titles)
+
+# plot spectrum of test1 and Gaussian Lowpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test1)), plt.title('test1 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test1GaussianLowpass)), plt.title('test1 Gaussian Lowpass spectrum')
+plt.show()
+
+# test1 Butterworth Lowpass Filter
+test1ButterworthLowpass, ratioButterLowpassTest1 = butterworth_frequency_filter(test1, d0=50, order=6, is_lowpass=True)
+print(ratioButterLowpassTest1)
+images = [test1, test1ButterworthLowpass]
+titles = ['test1', 'test1 Butterworth Lowpass']
+display_image(images, titles)
+
+# plot spectrum of test1 and Butterworth Lowpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test1)), plt.title('test1 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test1ButterworthLowpass)), plt.title('test1 Butterworth Lowpass spectrum')
+plt.show()
+
+# test2 Gaussian Lowpass Filter
+test2 = io.imread("test2.tif", as_gray=True)
+test2GaussianLowpass, ratioGaussianLowpassTest2 = gaussian_frequency_filter(test2, d0=50, is_lowpass=True)
+print(ratioGaussianLowpassTest2)
+images = [test2, test2GaussianLowpass]
+titles = ['test2', ' test2 Gaussian Lowpass']
+display_image(images, titles)
+
+# plot spectrum of test2 and Gaussian Lowpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test2)), plt.title('test2 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test2GaussianLowpass)), plt.title('test2 Gaussian Lowpass spectrum')
+plt.show()
+
+# test2 Butterworth Lowpass Filter
+test2ButterworthLowpass, ratioButterLowpassTest2 = butterworth_frequency_filter(test2, d0=40, order=6, is_lowpass=True)
+print(ratioButterLowpassTest2)
+images = [test2, test2ButterworthLowpass]
+titles = ['test2', ' test2 Butterworth Lowpass']
+display_image(images, titles)
+
+# plot spectrum of test2 and Butterworth Lowpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test2)), plt.title('test2 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test2ButterworthLowpass)), plt.title('test2 Butterworth Lowpass spectrum')
+plt.show()
+
+
+
+# test3 Gaussian Highpass Filter
+test3 = io.imread("test3_corrupt.pgm", as_gray=True)
+test3GaussianHighpass, ratioGaussianHighPassTest3 = gaussian_frequency_filter(test3, d0=50, is_lowpass=False)
+print(ratioGaussianHighPassTest3)
+images = [test3, test3GaussianHighpass]
+titles = ['test3', ' test3 Gaussian Highpass']
+display_image(images, titles)
+
+# plot spectrum of test3 and Gaussian Highpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test3)), plt.title('test3 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test3GaussianHighpass)), plt.title('test3 Gaussian Highpass Spectrum')
+plt.show()
+
+# test3 Butterworth Highpass Filter
+test3ButterworthHighpass, ratioButterHighpassTest3 = butterworth_frequency_filter(test3, d0=50, order=5,
+                                                                                  is_lowpass=False)
+print(ratioButterHighpassTest3)
+images = [test3, test3ButterworthHighpass]
+titles = ['test3', ' test3 Butterworth Highpass']
+display_image(images, titles)
+
+# plot spectrum of test3 and Butterworth Highpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test3)), plt.title('test3 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test3ButterworthHighpass)), plt.title('test3 Butterworth Highpass Spectrum')
+plt.show()
+
+# test4 Gaussian Highpass Filter
+test4 = io.imread("test4 copy.bmp", as_gray=True)
+test4GaussianHighpass, ratioGaussianHighPassTest4 = gaussian_frequency_filter(test4, d0=50, is_lowpass=False)
+print(ratioGaussianHighPassTest4)
+images = [test4, test4GaussianHighpass]
+titles = ['test4', 'test4 Gaussian Highpass']
+display_image(images, titles)
+
+# plot spectrum of test4 and Gaussian Highpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test4)), plt.title('test4 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test4GaussianHighpass)), plt.title('test4 Gaussian Highpass Spectrum')
+plt.show()
+
+# test4 Butterworth Highpass Filter
+test4ButterworthHighpass, ratioButterHighpassTest4 = butterworth_frequency_filter(test4, d0=50, order=5,
+                                                                                  is_lowpass=False)
+print(ratioButterHighpassTest4)
+images = [test4, test4ButterworthHighpass]
+titles = ['test4', 'test4 Butterworth Highpass']
+display_image(images, titles)
+
+# plot spectrum of test4 and Butterworth Highpass
+plt.subplot(121), plt.imshow(magnitude_spectrum(test4)), plt.title('test4 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test4ButterworthHighpass)), plt.title('test4 Butterworth Highpass Spectrum')
+plt.show()
+
+# test3 Laplacian Highpass Filter
+test3Laplacian = laplacian_frequency_filter(test3)
+images = [test3, test3Laplacian]
+titles = ['test3', 'test3 Laplacian Filter']
+display_image(images, titles)
+
+# plot spectrum of test3 and Laplacian
+plt.subplot(121), plt.imshow(magnitude_spectrum(test3)), plt.title('test3 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test3Laplacian)), plt.title('test3 Laplacian Spectrum')
+plt.show()
+
+# test4 Laplacian Highpass Filter
+test4Laplacian = laplacian_frequency_filter(test4)
+images = [test4, test4Laplacian]
+titles = ['test4', 'test4 Laplacian Filter']
+display_image(images, titles)
+
+# plot spectrum of test4 and Laplacian
+plt.subplot(121), plt.imshow(magnitude_spectrum(test4)), plt.title('test4 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test4Laplacian)), plt.title('test4 Laplacian Spectrum')
+plt.show()
+
+# test3 Unsharp Filter
+test3Unsharp = unsharp_frequency_filter(test3, d0=1, k1=1, k2=1000)
+images = [test3, test3Unsharp]
+titles = ['test3', 'test3 Unsharp Filter']
+display_image(images, titles)
+
+#  plot spectrum of test3 and Unsharp
+plt.subplot(121), plt.imshow(magnitude_spectrum(test3)), plt.title('test3 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test3Unsharp)), plt.title('test3 Unsharp Spectrum')
+plt.show()
+
+
+# test4 Unsharp Filter
+test4Unsharp = unsharp_frequency_filter(test4, d0=1, k1=1, k2=1000)
+images = [test4, test4Unsharp]
+titles = ['test4', 'test4 Unsharp Filter']
+display_image(images, titles)
+
+#  plot spectrum of test3 and Unsharp
+plt.subplot(121), plt.imshow(magnitude_spectrum(test4)), plt.title('test4 spectrum')
+plt.subplot(122), plt.imshow(magnitude_spectrum(test4Unsharp)), plt.title('test4 Unsharp Spectrum')
+plt.show()

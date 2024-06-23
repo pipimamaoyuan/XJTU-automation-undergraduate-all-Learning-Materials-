@@ -1,0 +1,183 @@
+import cv2
+from skimage.filters import try_all_threshold
+from skimage.filters import threshold_otsu
+from skimage.exposure import match_histograms
+import matplotlib.pyplot as plt
+
+#读取文件
+citywall = cv2.cvtColor(cv2.imread("citywall.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+citywall1 = cv2.cvtColor(cv2.imread("citywall1.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+citywall2 = cv2.cvtColor(cv2.imread("citywall2.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+
+elain = cv2.cvtColor(cv2.imread("elain.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+elain1 = cv2.cvtColor(cv2.imread("elain1.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+elain2 = cv2.cvtColor(cv2.imread("elain2.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+elain3 = cv2.cvtColor(cv2.imread("elain3.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+
+lena = cv2.cvtColor(cv2.imread("lena.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+lena1 = cv2.cvtColor(cv2.imread("lena1.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+lena2 = cv2.cvtColor(cv2.imread("lena2.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+lena4 = cv2.cvtColor(cv2.imread("lena4.bmp", flags=cv2.IMREAD_COLOR), code=cv2.COLOR_BGR2GRAY)
+
+
+def display_image(images, titles):
+    for i in range(2):
+        plt.subplot(1, 2, i + 1)
+        plt.imshow(images[i], 'gray')
+        plt.title(titles[i])
+        plt.xticks([]), plt.yticks([])
+    plt.show()
+
+# 绘制直方图
+plt.hist(citywall.ravel(), bins=256, range=(0, 255)), plt.title("citywall original histogram")
+plt.show()
+
+plt.hist(citywall1.ravel(), bins=256, range=(0, 255)), plt.title("citywall1 original histogram")
+plt.show()
+
+plt.hist(citywall2.ravel(), bins=256, range=(0, 255)), plt.title("citywall2 original histogram")
+plt.show()
+
+plt.hist(elain.ravel(), bins=256, range=(0, 255)), plt.title("elain original histogram")
+plt.show()
+
+plt.hist(elain1.ravel(), bins=256, range=(0, 255)), plt.title("elain1 original histogram")
+plt.show()
+
+plt.hist(elain2.ravel(), bins=256, range=(0, 255)), plt.title("elain2 original histogram")
+plt.show()
+
+plt.hist(elain3.ravel(), bins=256, range=(0, 255)), plt.title("elain3 original histogram")
+plt.show()
+
+plt.hist(lena.ravel(), bins=256, range=(0, 255)), plt.title("lena original histogram")
+plt.show()
+
+plt.hist(lena1.ravel(), bins=256, range=(0, 255)), plt.title("lena1 original histogram")
+plt.show()
+
+plt.hist(lena2.ravel(), bins=256, range=(0, 255)), plt.title("lena2 original histogram")
+plt.show()
+
+plt.hist(lena4.ravel(), bins=256, range=(0, 255)), plt.title("lena4 original histogram")
+plt.show()
+
+# 直方图均衡
+plt.subplot(121), plt.imshow(citywall, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("citywall original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(citywall), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "citywall equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(citywall1, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("citywall1 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(citywall1), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "citywall1 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(citywall2, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("citywall2 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(citywall2), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "citywall2 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(elain, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("elain original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(elain), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "elain equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(elain1, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("elain1 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(elain1), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "elain1 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(elain2, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("elain2 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(elain2), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "elain2 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(elain3, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("elain3 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(elain3), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "elain3 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(lena, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("lena original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(lena), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "lena equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(lena1, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("lena1 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(lena1), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "lena1 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(lena2, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("lena2 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(lena2), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "lena2 equalization")
+plt.show()
+
+plt.subplot(121), plt.imshow(lena4, cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title("lena4 original image")
+plt.subplot(122), plt.imshow(cv2.equalizeHist(lena4), cmap='gray'), plt.xticks([]), plt.yticks([]), plt.title(
+    "lena4 equalization")
+plt.show()
+
+
+matchCitywall1WithCitywall = match_histograms(image=citywall1, reference=citywall)
+images = [citywall1, matchCitywall1WithCitywall]
+titles = ['citywall1 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchCitywall2WithCitywall = match_histograms(image=citywall2, reference=citywall)
+images = [citywall2, matchCitywall2WithCitywall]
+titles = ['citywall2 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchElain1WithElain = match_histograms(image=elain1, reference=elain)
+images = [elain1, matchElain1WithElain]
+titles = ['elain1 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchElain2WithElain = match_histograms(image=elain2, reference=elain)
+images = [elain2, matchElain2WithElain]
+titles = ['elain2 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchElain3WithElain = match_histograms(image=elain3, reference=elain)
+images = [elain3, matchElain3WithElain]
+titles = ['elain3 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchLena1WithLena = match_histograms(image=lena1, reference=lena)
+images = [lena1, matchLena1WithLena]
+titles = ['lena original image', 'histogram matching image']
+display_image(images, titles)
+
+matchLena2WithLena = match_histograms(image=lena2, reference=lena)
+images = [lena2, matchLena2WithLena]
+titles = ['lena2 original image', 'histogram matching image']
+display_image(images, titles)
+
+matchLena4WithLena = match_histograms(image=lena4, reference=lena)
+images = [lena4, matchLena4WithLena]
+titles = ['lena4 original image', 'histogram matching image']
+display_image(images, titles)
+
+# 局部直方图增强
+clahe = cv2.createCLAHE(clipLimit=3.5, tileGridSize=(7, 7))
+claneElain = clahe.apply(elain)
+images = [elain, claneElain]
+titles = ['elain original image', 'Local histogram augmentation']
+display_image(images, titles)
+
+claneLena = clahe.apply(lena)
+images = [lena, claneLena]
+titles = ['lena original image', 'Local histogram augmentation']
+display_image(images, titles)
+
+#直方图分割
+segElain, ax = try_all_threshold(elain, figsize=(10, 8), verbose=True)
+plt.show()
+
+segElain, ax = try_all_threshold(citywall, figsize=(10, 8), verbose=True)
+plt.show()
+
+segElain, ax = try_all_threshold(lena, figsize=(10, 8), verbose=True)
+plt.show()
+
