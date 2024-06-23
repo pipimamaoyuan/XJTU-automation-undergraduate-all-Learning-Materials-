@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<DRVI4.1>
+	<USBCard8  >
+		<ICName value="1717132517"> </ICName>
+		<Position value="183,309,183,309,32,32"> </Position>
+		<SampleMode value="0"> </SampleMode>
+		<PreSampleLen value="0"> </PreSampleLen>
+		<TrigleLevel value="0"> </TrigleLevel>
+		<SampleLength value="1024"> </SampleLength>
+		<SampleFrequency value="5000"> </SampleFrequency>
+		<OutLine0 value="-1"> </OutLine0>
+		<OutLine1 value="20"> </OutLine1>
+		<OutLine2 value="-1"> </OutLine2>
+		<OutLine3 value="-1"> </OutLine3>
+		<OutLine4 value="6"> </OutLine4>
+		<OutLine5 value="1"> </OutLine5>
+		<OutLine6 value="30"> </OutLine6>
+		<OutLine7 value="-1"> </OutLine7>
+		<DLine value="9"> </DLine>
+		<Data value="0"> </Data>
+	</USBCard8>
+	<Script  >
+		<ICName value="1717132541"> </ICName>
+		<Position value="131,310,295,289,32,32,-1,0"> </Position>
+		<Parameter1 value="16,7,6,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+Dim data(2030),a(2000) 
+GWVI.ReadPortArray 4,1024, data 
+gate=2000 
+k=0 
+j1=0 
+j2=0 
+For i = 0 To 1000  
+  If data(i)<=gate Then  
+    j1=1  
+  Else  
+    j1=0   
+  End If  
+ 
+  If j2<j1 Then  
+    a(k)=i  
+    k=k+1  
+  End If  
+ 
+j2=j1 
+Next 
+ 
+dt=GWVI.ReadInterval(4) 
+ 
+If k>2 Then  
+  npoint=a(k-1)-a(1)  
+  If npoint>0 Then   
+    t=dt*npoint  
+    interval=t/(k-2)  
+    Fre=1.0/interval  
+    Speed=Fre*3.75 
+    GWVI.WritePort 2,Fre  
+    GWVI.WritePort 3,Speed 
+  End If 
+End If 
+ 
+ 
+If k<3 Then  
+  GWVI.WritePort 2,0 
+  GWVI.WritePort 3,0 
+End If 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+]]></script>
+	</Script>
+	<OnOffButtonIC  >
+		<ICName value="1717132565"> </ICName>
+		<X0 value="317"> </X0>
+		<Y0 value="309"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="On/Off"> </Caption>
+		<BGColor value="128"> </BGColor>
+		<FGColor value="8454143"> </FGColor>
+		<Value value="1"> </Value>
+		<BusDataLine value="9"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</OnOffButtonIC>
+	<LEDIC  >
+		<ICName value="1717132704"> </ICName>
+		<X0 value="319"> </X0>
+		<Y0 value="194"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="1947.100960"> </Value>
+		<BusDataLine value="10"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1717134294"> </ICName>
+		<Parameters value="6,1717132541,4,1717132517,6,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717134309"> </ICName>
+		<Position value="84,311,298,164,32,32,-1,0"> </Position>
+		<Parameter1 value="1,15,8,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+ 
+Dim data(2030),a(2000) 
+GWVI.ReadPortArray 2,1024, data  
+gate=2000 
+k=0 
+j1=0 
+j2=0 
+For i = 0 To 1000  
+  If data(i)<=gate Then  
+    j1=1  
+  Else  
+    j1=0  
+  End If  
+ 
+  If j2<j1 Then  
+    a(k)=i  
+    k=k+1  
+  End If  
+ 
+j2=j1 
+Next 
+ 
+dt=GWVI.ReadInterval(2) 
+If k>2 Then  
+  npoint=a(k-1)-a(1) 
+  
+  If npoint>0 Then   
+    t=dt*npoint  
+    interval=t/(k-2)  
+    Fre=1.0/interval  
+    Speed=Fre*60  
+  Speed=Speed/2 
+    GWVI.WritePort 3,Fre   
+    GWVI.WritePort 4,Speed  
+  End If 
+End If 
+ 
+If k<3 Then  
+  GWVI.WritePort 3,-1   
+  GWVI.WritePort 4,-1  
+ 
+End If 
+ 
+
+
+
+
+
+
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717134388"> </ICName>
+		<Parameters value="1,1717134309,2,1717132517,7,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717134582"> </ICName>
+		<Position value="41,310,215,214,32,32,1,0"> </Position>
+		<Parameter1 value="8,7,10,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[a=GWVI.ReadPort(2) 
+b=GWVI.ReadPort(3) 
+c=(a+b)/2 
+GWVI.WritePort 4,c 
+
+
+
+
+
+
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717134854"> </ICName>
+		<Parameters value="7,1717132541,3,1717134582,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717134867"> </ICName>
+		<Parameters value="8,1717134309,4,1717134582,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717134898"> </ICName>
+		<Parameters value="8,1717134395,1,1717134309,4,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717134906"> </ICName>
+		<Parameters value="7,1717134901,1,1717132541,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717135250"> </ICName>
+		<Parameters value="10,1717134582,4,1717132704,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717135495"> </ICName>
+		<Parameters value="1,1717134582,1,1717132517,7,1337293"> </Parameters>
+	</ZLineIC>
+	<MeterIC  >
+		<ICName value="1717135679"> </ICName>
+		<X0 value="45"> </X0>
+		<Y0 value="196"> </Y0>
+		<PinRadius value="60"> </PinRadius>
+		<PinToEdge value="25"> </PinToEdge>
+		<XBorderSize value="25"> </XBorderSize>
+		<YBorderSize value="25"> </YBorderSize>
+		<FGColor value="0"> </FGColor>
+		<BGColor value="16757864"> </BGColor>
+		<PinColor value="128"> </PinColor>
+		<NumOfScale value="10"> </NumOfScale>
+		<Maximum value="4000.000000"> </Maximum>
+		<Minimum value="0.000000"> </Minimum>
+		<Value value="1947.100960"> </Value>
+		<BusDataLine value="10"> </BusDataLine>
+		<ICType value="4"> </ICType>
+		<Border value="3"> </Border>
+		<MeterWidth value="15"> </MeterWidth>
+		<MeterBgColor value="16757864"> </MeterBgColor>
+		<MeterRingColor1 value="65280"> </MeterRingColor1>
+		<MeterRingColor2 value="255"> </MeterRingColor2>
+		<Amplifer value="1.000000"> </Amplifer>
+	</MeterIC>
+	<ZLineIC  >
+		<ICName value="1717135705"> </ICName>
+		<Parameters value="10,1717134582,4,1717135679,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LEDIC  >
+		<ICName value="1717135834"> </ICName>
+		<X0 value="83"> </X0>
+		<Y0 value="127"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="43.316832"> </Value>
+		<BusDataLine value="15"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1717135989"> </ICName>
+		<Parameters value="15,1717135834,1,1717134309,3,1337293"> </Parameters>
+	</ZLineIC>
+	<LEDIC  >
+		<ICName value="1717135994"> </ICName>
+		<X0 value="318"> </X0>
+		<Y0 value="119"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="691.919192"> </Value>
+		<BusDataLine value="16"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1717136002"> </ICName>
+		<Parameters value="16,1717135994,1,1717132541,2,1337293"> </Parameters>
+	</ZLineIC>
+	<WaveIC  >
+		<ICName value="1717136018"> </ICName>
+		<X0 value="521"> </X0>
+		<Y0 value="384"> </Y0>
+		<LengthOfShow value="495"> </LengthOfShow>
+		<High value="180"> </High>
+		<BgColor value="12615680"> </BgColor>
+		<FGColor value="16777215"> </FGColor>
+		<CurveColor value="8388608"> </CurveColor>
+		<Maximum value="1000.000000"> </Maximum>
+		<Minimum value="-1000.000000"> </Minimum>
+		<Left value="40"> </Left>
+		<Type value="0"> </Type>
+		<YArrayLine value="6"> </YArrayLine>
+		<XArrayLine value="-1"> </XArrayLine>
+	</WaveIC>
+	<ZLineIC  >
+		<ICName value="1717136037"> </ICName>
+		<Parameters value="16,1717136018,1,1717132541,2,1337293"> </Parameters>
+	</ZLineIC>
+	<WaveIC  >
+		<ICName value="1717136041"> </ICName>
+		<X0 value="4"> </X0>
+		<Y0 value="385"> </Y0>
+		<LengthOfShow value="495"> </LengthOfShow>
+		<High value="180"> </High>
+		<BgColor value="12615680"> </BgColor>
+		<FGColor value="16777215"> </FGColor>
+		<CurveColor value="8388608"> </CurveColor>
+		<Maximum value="1000.000000"> </Maximum>
+		<Minimum value="-1000.000000"> </Minimum>
+		<Left value="40"> </Left>
+		<Type value="0"> </Type>
+		<YArrayLine value="1"> </YArrayLine>
+		<XArrayLine value="-1"> </XArrayLine>
+	</WaveIC>
+	<ZLineIC  >
+		<ICName value="1717136047"> </ICName>
+		<Parameters value="15,1717136041,1,1717134309,3,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717136685"> </ICName>
+		<Position value="818,128,700,367,32,32,1,0"> </Position>
+		<Parameter1 value="21,19,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+Dim data(1024) 
+ 
+For i=0 To 1023 
+  data(i)=0.001 
+Next 
+ 
+GWVI.ReadPortArray 2,1024, data 
+max_value=0 
+ 
+For i=1 To 511 
+  If data(i)>max_value Then 
+     max_value=data(i) 
+     point=i 
+  End If 
+Next 
+If max_value>5 And point>0 Then 
+  interval=GWVI.ReadInterval(2)  
+  freq=interval*point 
+  GWVI.WritePort 3,freq 
+Else 
+GWVI.WritePort 3,0  
+End If 
+ 
+ 
+If freq<=20 And freq>=10 Then 
+  K=(freq-10)*(215-135)+135 
+Else 
+  If freq>20 And freq<=40 Then 
+    K=(freq-20)*(205-215)+215 
+  Else 
+    If freq>40 Then 
+      K=200 
+    End If 
+  End If 
+End If 
+ 
+If k>0 Then 
+zf=freq/K 
+GWVI.WritePort 4,zf  
+Else 
+  GWVI.WritePort 4,0 
+End If 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+]]></script>
+	</Script>
+	<Fourier  >
+		<ICName value="1717136778"> </ICName>
+		<Position value="768,128,761,320,32,32,2"> </Position>
+		<Parameter1 value="1024,20,21,22,2,512,-1,-1"> </Parameter1>
+		<Parameter2 value="0.000000,1000.000000"> </Parameter2>
+	</Fourier>
+	<ZLineIC  >
+		<ICName value="1717136875"> </ICName>
+		<Parameters value="19,1717136685,3,1717136865,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LEDIC  >
+		<ICName value="1717137177"> </ICName>
+		<X0 value="642"> </X0>
+		<Y0 value="70"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="43.945313"> </Value>
+		<BusDataLine value="19"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1717137195"> </ICName>
+		<Parameters value="19,1717136685,3,1717137177,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717137238"> </ICName>
+		<Parameters value="1,1717136685,1,1717132517,7,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717137348"> </ICName>
+		<Parameters value="20,1717132517,3,1717136778,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717137361"> </ICName>
+		<Parameters value="21,1717136778,2,1717136685,2,1337293"> </Parameters>
+	</ZLineIC>
+	<RAMIC  >
+		<ICName value="1717137759"> </ICName>
+		<X0 value="864"> </X0>
+		<Y0 value="127"> </Y0>
+		<Line1 value="22"> </Line1>
+		<Line2 value="-1"> </Line2>
+	</RAMIC>
+	<ZLineIC  >
+		<ICName value="1717137795"> </ICName>
+		<Parameters value="22,1717136778,3,1717137759,1,1337293"> </Parameters>
+	</ZLineIC>
+	<WaveIC  >
+		<ICName value="1717137892"> </ICName>
+		<X0 value="513"> </X0>
+		<Y0 value="175"> </Y0>
+		<LengthOfShow value="495"> </LengthOfShow>
+		<High value="180"> </High>
+		<BgColor value="12615680"> </BgColor>
+		<FGColor value="16777215"> </FGColor>
+		<CurveColor value="8388608"> </CurveColor>
+		<Maximum value="100.000000"> </Maximum>
+		<Minimum value="0.000000"> </Minimum>
+		<Left value="40"> </Left>
+		<Type value="0"> </Type>
+		<YArrayLine value="21"> </YArrayLine>
+		<XArrayLine value="-1"> </XArrayLine>
+	</WaveIC>
+	<WavePara  >
+		<ICName value="1717137940"> </ICName>
+		<Position value="910,127,840,154,32,32"> </Position>
+		<Parameter1 value="1024,0,1,20,23,-1"> </Parameter1>
+	</WavePara>
+	<ZLineIC  >
+		<ICName value="1717137951"> </ICName>
+		<Parameters value="20,1717132517,3,1717137940,1,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717137958"> </ICName>
+		<Position value="956,127,841,385,32,32,-1,0"> </Position>
+		<Parameter1 value="23,24,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+dim vin 
+dim k 
+dim vout 
+k=200 
+vin=gwvi.readport(2) 
+vout=vin/20/11 
+gwvi.writeport 3,vout 
+ 
+
+
+
+
+
+
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717137990"> </ICName>
+		<Parameters value="23,1717137940,2,1717137958,2,1337293"> </Parameters>
+	</ZLineIC>
+	<LEDIC  >
+		<ICName value="1717138000"> </ICName>
+		<X0 value="642"> </X0>
+		<Y0 value="118"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="0.340133"> </Value>
+		<BusDataLine value="24"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1717138011"> </ICName>
+		<Parameters value="24,1717137958,3,1717138000,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1717138064"> </ICName>
+		<X0 value="281"> </X0>
+		<Y0 value="8"> </Y0>
+		<Width value="500"> </Width>
+		<High value="50"> </High>
+		<Caption value="汽车振动及光照检测系统"> </Caption>
+		<BGColor value="16744448"> </BGColor>
+		<FGColor value="8454143"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="30,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717138166"> </ICName>
+		<X0 value="321"> </X0>
+		<Y0 value="259"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="平均转速"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="15,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717138246"> </ICName>
+		<X0 value="74"> </X0>
+		<Y0 value="71"> </Y0>
+		<Width value="120"> </Width>
+		<High value="50"> </High>
+		<Caption value="光电传感器频率"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="12,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717138294"> </ICName>
+		<X0 value="315"> </X0>
+		<Y0 value="78"> </Y0>
+		<Width value="120"> </Width>
+		<High value="30"> </High>
+		<Caption value="磁电传感器频率"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="12,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717138342"> </ICName>
+		<X0 value="511"> </X0>
+		<Y0 value="129"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="振动速度"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="15,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717138369"> </ICName>
+		<X0 value="511"> </X0>
+		<Y0 value="80"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="振动频率"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="15,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1718241828"> </ICName>
+		<X0 value="46"> </X0>
+		<Y0 value="639"> </Y0>
+		<Width value="100"> </Width>
+		<High value="18"> </High>
+		<Caption value="光照强度："> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="15,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1718241860"> </ICName>
+		<X0 value="246"> </X0>
+		<Y0 value="639"> </Y0>
+		<Width value="60"> </Width>
+		<High value="18"> </High>
+		<Caption value="Lx"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="15,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ButtonIC  >
+		<ICName value="1718242013"> </ICName>
+		<X0 value="327"> </X0>
+		<Y0 value="636"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="零位校正"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="33"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<WaveIC  >
+		<ICName value="1718242192"> </ICName>
+		<X0 value="516"> </X0>
+		<Y0 value="594"> </Y0>
+		<LengthOfShow value="495"> </LengthOfShow>
+		<High value="180"> </High>
+		<BgColor value="12615680"> </BgColor>
+		<FGColor value="16777215"> </FGColor>
+		<CurveColor value="8388608"> </CurveColor>
+		<Maximum value="150.000000"> </Maximum>
+		<Minimum value="0.000000"> </Minimum>
+		<Left value="40"> </Left>
+		<Type value="0"> </Type>
+		<YArrayLine value="34"> </YArrayLine>
+		<XArrayLine value="-1"> </XArrayLine>
+	</WaveIC>
+	<Script  >
+		<ICName value="1718242303"> </ICName>
+		<Position value="287,736,189,48,32,32,-1,0"> </Position>
+		<Parameter1 value="2,4,3,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+Rem Write VBScript Here 
+ 
+Vi= GWVI.ReadPort(2) 
+Vold= GWVI.ReadPort(3) 
+  k=2 
+  L=(Vi-Vold)*k 
+GWVI.WritePort  4,  L 
+
+
+
+
+
+]]></script>
+	</Script>
+	<Script  >
+		<ICName value="1718242309"> </ICName>
+		<Position value="396,735,239,64,32,32,33,0"> </Position>
+		<Parameter1 value="2,-1,3,34,4,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+z= GWVI.ReadPort(2) 
+GWVI.WritePort  6,  z 
+ 
+GWVI.WritePort  4,  0 
+GWVI.WritePort  5,  0 
+
+
+
+
+
+]]></script>
+	</Script>
+	<WavePara  >
+		<ICName value="1718242324"> </ICName>
+		<Position value="231,737,151,62,32,32"> </Position>
+		<Parameter1 value="1024,0,1,30,2,-1"> </Parameter1>
+	</WavePara>
+	<LEDIC  >
+		<ICName value="1718242607"> </ICName>
+		<X0 value="150"> </X0>
+		<Y0 value="623"> </Y0>
+		<Width value="100"> </Width>
+		<High value="50"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="-1.216607"> </Value>
+		<BusDataLine value="3"> </BusDataLine>
+	</LEDIC>
+	<ZLineIC  >
+		<ICName value="1718245268"> </ICName>
+		<Parameters value="30,1717132517,8,1718242324,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718245450"> </ICName>
+		<Parameters value="2,1718242324,2,1718242303,2,1337293"> </Parameters>
+	</ZLineIC>
+	<HisDigram  >
+		<ICName value="1718245987"> </ICName>
+		<Position value="343,737,343,737,32,32"> </Position>
+		<DataLine value="9"> </DataLine>
+		<DataLine value="3"> </DataLine>
+		<DataLine value="34"> </DataLine>
+		<DataLine value="1024"> </DataLine>
+		<DataLine value="500"> </DataLine>
+	</HisDigram>
+	<ZLineIC  >
+		<ICName value="1718246091"> </ICName>
+		<Parameters value="3,1718242303,4,1718245987,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718246203"> </ICName>
+		<Parameters value="34,1718245987,3,1718242309,5,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718246237"> </ICName>
+		<Parameters value="4,1718242303,3,1718242309,6,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718246491"> </ICName>
+		<Parameters value="33,1718242013,1,1718242309,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718246532"> </ICName>
+		<Parameters value="2,1718242324,2,1718242309,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718246576"> </ICName>
+		<Parameters value="3,1718242303,4,1718242309,4,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1718247053"> </ICName>
+		<X0 value="675"> </X0>
+		<Y0 value="783"> </Y0>
+		<Width value="150"> </Width>
+		<High value="18"> </High>
+		<Caption value="光照强度变化曲线"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1718247066"> </ICName>
+		<X0 value="686"> </X0>
+		<Y0 value="361"> </Y0>
+		<Width value="150"> </Width>
+		<High value="18"> </High>
+		<Caption value="振动加速度频谱分析"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1718247069"> </ICName>
+		<X0 value="695"> </X0>
+		<Y0 value="573"> </Y0>
+		<Width value="130"> </Width>
+		<High value="18"> </High>
+		<Caption value="磁电传感器波形"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1718247387"> </ICName>
+		<X0 value="184"> </X0>
+		<Y0 value="582"> </Y0>
+		<Width value="130"> </Width>
+		<High value="18"> </High>
+		<Caption value="光电传感器波形"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LampIC  >
+		<ICName value="1718248845"> </ICName>
+		<X0 value="1153"> </X0>
+		<Y0 value="183"> </Y0>
+		<Status0Color value="65280"> </Status0Color>
+		<Status1Color value="8454143"> </Status1Color>
+		<Status2Color value="255"> </Status2Color>
+		<Size value="30"> </Size>
+		<Status value="2"> </Status>
+		<BusDataLine value="5"> </BusDataLine>
+		<Type value="0"> </Type>
+	</LampIC>
+	<LabelIC  >
+		<ICName value="1718248867"> </ICName>
+		<X0 value="1108"> </X0>
+		<Y0 value="278"> </Y0>
+		<Width value="160"> </Width>
+		<High value="18"> </High>
+		<Caption value="光照报警部分"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<Script  >
+		<ICName value="1718249064"> </ICName>
+		<Position value="1304,193,1304,193,32,32,1,0"> </Position>
+		<Parameter1 value="3,5,12,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+z= GWVI.ReadPort(2) 
+if z >38 then 
+GWVI.WriteText 1153,150,7," 光线太暗" 
+GWVI.WriteText 1153,150,0," 光线正常" 
+GWVI.WritePort 4,20 
+p=0 
+end if 
+if z <38 then 
+p=2 
+GWVI.WriteText 1153,150,7," 光线正常" 
+GWVI.WriteText 1153,150,0," 光线太暗" 
+GWVI.WritePort 4,500 
+end if 
+GWVI.WritePort  3,  p 
+ 
+
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1718249262"> </ICName>
+		<Parameters value="3,1718242303,4,1718249064,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718249465"> </ICName>
+		<Parameters value="1,1717136685,1,1718249064,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718249503"> </ICName>
+		<Parameters value="5,1718248845,1,1718249064,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718250130"> </ICName>
+		<Parameters value="9,1717132565,1,1718249064,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718251205"> </ICName>
+		<Parameters value="3,1718242303,4,1718249064,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718251210"> </ICName>
+		<Parameters value="5,1718248845,1,1718249064,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718251226"> </ICName>
+		<Parameters value="1,1717136685,1,1718249064,1,1337293"> </Parameters>
+	</ZLineIC>
+	<GeneratorIC  >
+		<ICName value="1718251977"> </ICName>
+		<X0 value="1302"> </X0>
+		<Y0 value="244"> </Y0>
+		<SignalType value="1"> </SignalType>
+		<SampleLen value="1024"> </SampleLen>
+		<SampleFre value="5120.000000"> </SampleFre>
+		<SignalAmplitude value="8000.000000"> </SignalAmplitude>
+		<Parameter1 value="500.000000"> </Parameter1>
+		<Parameter2 value="370.000000"> </Parameter2>
+		<Parameter3 value="0.000000"> </Parameter3>
+		<BusWaveLine value="11"> </BusWaveLine>
+		<BusSignalTypeLine value="-1"> </BusSignalTypeLine>
+		<BusSampleLenLine value="-1"> </BusSampleLenLine>
+		<BusSampleFreLine value="-1"> </BusSampleFreLine>
+		<BusSignalAmpLine value="-1"> </BusSignalAmpLine>
+		<BusParameter1Line value="12"> </BusParameter1Line>
+		<BusParameter2Line value="-1"> </BusParameter2Line>
+		<BusParameter3Line value="-1"> </BusParameter3Line>
+		<BusSwitchLine value="-1"> </BusSwitchLine>
+		<SwitchStatus value="0"> </SwitchStatus>
+	</GeneratorIC>
+	<SoundPlay  >
+		<ICName value="1718251983"> </ICName>
+		<Position value="1301,299,1301,299,32,32"> </Position>
+		<Parameter1 value="1,1024,11,-1,0"> </Parameter1>
+	</SoundPlay>
+	<ZLineIC  >
+		<ICName value="1718252004"> </ICName>
+		<Parameters value="11,1718251977,1,1718251983,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1718252041"> </ICName>
+		<Parameters value="12,1718249064,4,1718251977,6,1337293"> </Parameters>
+	</ZLineIC>
+</DRVI4.1>
