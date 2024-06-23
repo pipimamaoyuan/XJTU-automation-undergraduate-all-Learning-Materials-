@@ -1,0 +1,10 @@
+ADR r4,a
+LDR r0,[r4]
+ADR r4,b
+LDR r1,[r4]
+ADD r3,r0,r1
+ADR r4,c
+LDR r2,[r4]
+SUB r3,r3,r2
+ADR r4,x
+STR r3,[r4]

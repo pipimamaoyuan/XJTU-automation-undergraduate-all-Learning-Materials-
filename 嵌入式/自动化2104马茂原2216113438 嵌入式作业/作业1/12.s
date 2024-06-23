@@ -1,0 +1,17 @@
+mov ip,sp
+stmfd sp!,{fp,ip,lr,pc}
+sub fp,ip,#4
+sub sp,sp,#8
+str r0,[fp,#-16]
+ldr r3,[fp,#-16]
+add r3,r3,#1
+str r3,[fp,#-20]
+ldmea fp,[fp,sp,pc]
+mov ip,sp
+stmfd sp!,{fp,ip,lr,pc}
+sub fp,ip,#4
+sub sp,sp,#4
+str r0,[fp,#-16]
+ldr r0,[fp,#-16]
+bl f2
+ldmea fp,[fp,sp,pc]
