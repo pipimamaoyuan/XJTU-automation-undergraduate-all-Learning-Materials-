@@ -1,0 +1,6 @@
+﻿  mtest3.cpp
+D:\VSprogram\mtest3\mtest3\mtest3.cpp(53,37): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\VSprogram\mtest3\mtest3\mtest3.cpp(59,37): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\VSprogram\mtest3\mtest3\mtest3.cpp(27,27): warning C4101: “f”: 未引用的局部变量
+D:\VSprogram\mtest3\mtest3\mtest3.cpp(28,10): warning C4101: “c”: 未引用的局部变量
+  mtest3.vcxproj -> D:\VSprogram\mtest3\x64\Debug\mtest3.exe
