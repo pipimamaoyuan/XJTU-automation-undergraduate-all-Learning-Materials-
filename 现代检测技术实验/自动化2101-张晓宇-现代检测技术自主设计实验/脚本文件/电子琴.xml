@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<DRVI4.1>
+	<MultButtonIC  >
+		<ICName value="1714460213"> </ICName>
+		<X0 value="98"> </X0>
+		<Y0 value="346"> </Y0>
+		<Width value="40"> </Width>
+		<High value="26"> </High>
+		<Caption value="A#B#C#D#E#F#G#H#I#J#K#L#M#N#O"> </Caption>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="6067716"> </BGColor>
+		<NumofStatus value="15"> </NumofStatus>
+		<Direction value="0"> </Direction>
+		<Value value="12"> </Value>
+		<BusDataLine value="1"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</MultButtonIC>
+	<Script  >
+		<ICName value="1714460310"> </ICName>
+		<Position value="209,393,466,465,32,32,-1,0"> </Position>
+		<Parameter1 value="1,2,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+Dim a,fhz 
+ 
+a=GWVI.ReadPort(2) 
+If a=0 Then  
+fhz = 131 
+GWVI.WritePort 3, fhz 
+End If 
+If a=1 Then  
+fhz = 147 
+GWVI.WritePort 3, fhz 
+End If 
+If a=2 Then  
+fhz = 165 
+GWVI.WritePort 3, fhz 
+End If 
+If a=3 Then  
+fhz = 175 
+GWVI.WritePort 3, fhz 
+End If 
+If a=4 Then  
+fhz = 196 
+GWVI.WritePort 3, fhz 
+End If 
+If a=5 Then  
+fhz = 220 
+GWVI.WritePort 3, fhz 
+End If 
+If a=6 Then  
+fhz = 247 
+GWVI.WritePort 3, fhz 
+End If 
+If a=7 Then  
+fhz = 262 
+GWVI.WritePort 3, fhz 
+End If 
+If a=8 Then  
+fhz = 294 
+GWVI.WritePort 3, fhz 
+End If 
+If a=9 Then  
+fhz = 330 
+GWVI.WritePort 3, fhz 
+End If 
+If a=10 Then  
+fhz = 349 
+GWVI.WritePort 3, fhz 
+End If 
+If a=11 Then  
+fhz = 392 
+GWVI.WritePort 3, fhz 
+End If 
+If a=12 Then  
+fhz = 440 
+GWVI.WritePort 3, fhz 
+End If 
+If a=13 Then 
+fhz = 494 
+GWVI.WritePort 3, fhz 
+End If 
+If a=14 Then  
+fhz = 523 
+GWVI.WritePort 3, fhz 
+End If
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1714460717"> </ICName>
+		<Parameters value="1,1714460213,1,1714460310,2,1337293"> </Parameters>
+	</ZLineIC>
+	<GeneratorIC  >
+		<ICName value="1714460729"> </ICName>
+		<X0 value="251"> </X0>
+		<Y0 value="392"> </Y0>
+		<SignalType value="1"> </SignalType>
+		<SampleLen value="1024"> </SampleLen>
+		<SampleFre value="5120.000000"> </SampleFre>
+		<SignalAmplitude value="8000.000000"> </SignalAmplitude>
+		<Parameter1 value="440.000000"> </Parameter1>
+		<Parameter2 value="1475.000000"> </Parameter2>
+		<Parameter3 value="0.000000"> </Parameter3>
+		<BusWaveLine value="3"> </BusWaveLine>
+		<BusSignalTypeLine value="-1"> </BusSignalTypeLine>
+		<BusSampleLenLine value="-1"> </BusSampleLenLine>
+		<BusSampleFreLine value="-1"> </BusSampleFreLine>
+		<BusSignalAmpLine value="-1"> </BusSignalAmpLine>
+		<BusParameter1Line value="2"> </BusParameter1Line>
+		<BusParameter2Line value="-1"> </BusParameter2Line>
+		<BusParameter3Line value="-1"> </BusParameter3Line>
+		<BusSwitchLine value="4"> </BusSwitchLine>
+		<SwitchStatus value="0"> </SwitchStatus>
+	</GeneratorIC>
+	<ZLineIC  >
+		<ICName value="1714460737"> </ICName>
+		<Parameters value="2,1714460310,3,1714460729,6,1337293"> </Parameters>
+	</ZLineIC>
+	<WaveIC  >
+		<ICName value="1714460743"> </ICName>
+		<X0 value="206"> </X0>
+		<Y0 value="149"> </Y0>
+		<LengthOfShow value="495"> </LengthOfShow>
+		<High value="180"> </High>
+		<BgColor value="12615680"> </BgColor>
+		<FGColor value="16777215"> </FGColor>
+		<CurveColor value="8388608"> </CurveColor>
+		<Maximum value="10000.000000"> </Maximum>
+		<Minimum value="-10000.000000"> </Minimum>
+		<Left value="40"> </Left>
+		<Type value="0"> </Type>
+		<YArrayLine value="3"> </YArrayLine>
+		<XArrayLine value="-1"> </XArrayLine>
+	</WaveIC>
+	<ZLineIC  >
+		<ICName value="1714460751"> </ICName>
+		<Parameters value="3,1714460729,1,1714460743,1,1337293"> </Parameters>
+	</ZLineIC>
+	<OnOffButtonIC  >
+		<ICName value="1714460813"> </ICName>
+		<X0 value="101"> </X0>
+		<Y0 value="395"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="On/Off"> </Caption>
+		<BGColor value="4"> </BGColor>
+		<FGColor value="14"> </FGColor>
+		<Value value="0"> </Value>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</OnOffButtonIC>
+	<ZLineIC  >
+		<ICName value="1714460820"> </ICName>
+		<Parameters value="4,1714460813,1,1714460729,9,1337293"> </Parameters>
+	</ZLineIC>
+	<SoundPlay  >
+		<ICName value="1714460866"> </ICName>
+		<Position value="292,391,714,461,32,32"> </Position>
+		<Parameter1 value="1,1024,3,-1,0"> </Parameter1>
+	</SoundPlay>
+	<ZLineIC  >
+		<ICName value="1714460874"> </ICName>
+		<Parameters value="3,1714460729,1,1714460866,1,1337293"> </Parameters>
+	</ZLineIC>
+	<EDITIC  >
+		<ICName value="1714461065"> </ICName>
+		<X0 value="97"> </X0>
+		<Y0 value="263"> </Y0>
+		<Width value="100"> </Width>
+		<High value="44"> </High>
+		<BusDataLine value="2"> </BusDataLine>
+		<ShowValue value="440"> </ShowValue>
+		<Font value="40,0,1"> </Font>
+	</EDITIC>
+	<ZLineIC  >
+		<ICName value="1714461079"> </ICName>
+		<Parameters value="2,1714461065,1,1714460310,3,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1714461153"> </ICName>
+		<X0 value="94"> </X0>
+		<Y0 value="232"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="频率"> </Caption>
+		<BGColor value="16777088"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="20,1,1,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1714461275"> </ICName>
+		<X0 value="314"> </X0>
+		<Y0 value="97"> </Y0>
+		<Width value="300"> </Width>
+		<High value="50"> </High>
+		<Caption value="标准纯音信号"> </Caption>
+		<BGColor value="8388608"> </BGColor>
+		<FGColor value="16777215"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="36,1,0,2"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+</DRVI4.1>

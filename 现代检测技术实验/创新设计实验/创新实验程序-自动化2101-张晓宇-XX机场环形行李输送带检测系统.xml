@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<DRVI4.1>
+	<OnOffButtonIC  >
+		<ICName value="1717468271"> </ICName>
+		<X0 value="39"> </X0>
+		<Y0 value="169"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="On/Off"> </Caption>
+		<BGColor value="4"> </BGColor>
+		<FGColor value="14"> </FGColor>
+		<Value value="0"> </Value>
+		<BusDataLine value="1"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</OnOffButtonIC>
+	<LEDIC  >
+		<ICName value="1717468278"> </ICName>
+		<X0 value="292"> </X0>
+		<Y0 value="236"> </Y0>
+		<Width value="140"> </Width>
+		<High value="70"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="0.000000"> </Value>
+		<BusDataLine value="5"> </BusDataLine>
+	</LEDIC>
+	<LEDIC  >
+		<ICName value="1717468280"> </ICName>
+		<X0 value="450"> </X0>
+		<Y0 value="235"> </Y0>
+		<Width value="140"> </Width>
+		<High value="70"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="61.935007"> </Value>
+		<BusDataLine value="4"> </BusDataLine>
+	</LEDIC>
+	<Script  >
+		<ICName value="1717468287"> </ICName>
+		<Position value="180,168,386,145,32,32,-1,0"> </Position>
+		<Parameter1 value="2,-1,5,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+ 
+Rem a()用于存放下降沿的位置 
+Dim data(1024),a(1024) 
+GWVI.ReadPortArray 2,1024, data 
+gate=800 
+k=0 
+j1=0 
+j2=0 
+Rem for循环可一次将所有下降沿的点位存入数组a()中 
+For i = 0 To 500 
+  If data(i)<=gate Then 
+     j1=1 
+  Else 
+     j1=0 
+  End If 
+  If j2<j1 Then 
+     a(k)=i 
+     k=k+1 
+  End If 
+  j2=j1 
+Next 
+ 
+Rem 取得采样周期 
+dt=GWVI.ReadInterval(2) 
+If k>2 Then 
+  npoint=a(k-1)-a(0) 
+Rem 如果出现没有脉冲的情况就会在计算Fre（实测频率）时出错。因此，要保留这个Rem 容错语句 
+  If npoint>0 Then 
+    t=dt*npoint 
+    interval=t/(k-2) 
+    Fre=1.0/interval 
+     
+  End If 
+Rem 下面计算中转速 
+   
+  LineSpeed=Fre*12.7 
+GWVI.WritePort 3,Fre 
+GWVI.WritePort 4,LineSpeed 
+  
+ 
+   
+End If 
+ 
+If k<3 Then 
+GWVI.WritePort 3,0 
+GWVI.WritePort 4,0 
+ 
+End If 
+ 
+ 
+ 
+ 
+
+
+]]></script>
+	</Script>
+	<USBCard8  >
+		<ICName value="1717468299"> </ICName>
+		<Position value="143,167,143,167,32,32"> </Position>
+		<SampleMode value="0"> </SampleMode>
+		<PreSampleLen value="0"> </PreSampleLen>
+		<TrigleLevel value="0"> </TrigleLevel>
+		<SampleLength value="1024"> </SampleLength>
+		<SampleFrequency value="5000"> </SampleFrequency>
+		<OutLine0 value="14"> </OutLine0>
+		<OutLine1 value="12"> </OutLine1>
+		<OutLine2 value="-1"> </OutLine2>
+		<OutLine3 value="7"> </OutLine3>
+		<OutLine4 value="3"> </OutLine4>
+		<OutLine5 value="2"> </OutLine5>
+		<OutLine6 value="-1"> </OutLine6>
+		<OutLine7 value="-1"> </OutLine7>
+		<DLine value="1"> </DLine>
+		<Data value="0"> </Data>
+	</USBCard8>
+	<Octave  >
+		<ICName value="1717468307"> </ICName>
+		<Position value="180,207,405,266,32,32"> </Position>
+		<Parameter1 value="1024,1,3,6,3,4"> </Parameter1>
+		<Parameter2 value="1.000000"> </Parameter2>
+	</Octave>
+	<ZLineIC  >
+		<ICName value="1717468313"> </ICName>
+		<Parameters value="1,1717468271,1,1717468299,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468328"> </ICName>
+		<Parameters value="2,1717468299,7,1717468287,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468333"> </ICName>
+		<Parameters value="3,1717468299,6,1717468307,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468336"> </ICName>
+		<Parameters value="4,1717468307,3,1717468280,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468339"> </ICName>
+		<Parameters value="5,1717468287,4,1717468278,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468563"> </ICName>
+		<Parameters value="3,1717468307,1,1717468558,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717468627"> </ICName>
+		<Parameters value="6,1717468307,2,1717468619,1,1337293"> </Parameters>
+	</ZLineIC>
+	<WavePara  >
+		<ICName value="1717468786"> </ICName>
+		<Position value="179,243,288,355,32,32"> </Position>
+		<Parameter1 value="1024,4,1,7,24,-1"> </Parameter1>
+	</WavePara>
+	<ZLineIC  >
+		<ICName value="1717468882"> </ICName>
+		<Parameters value="7,1717468299,5,1717468786,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LEDIC  >
+		<ICName value="1717468894"> </ICName>
+		<X0 value="238"> </X0>
+		<Y0 value="423"> </Y0>
+		<Width value="140"> </Width>
+		<High value="70"> </High>
+		<FGColor value="8454143"> </FGColor>
+		<BGColor value="8388608"> </BGColor>
+		<LengthOfLed value="5"> </LengthOfLed>
+		<Align value="1"> </Align>
+		<Value value="-3970.205784"> </Value>
+		<BusDataLine value="24"> </BusDataLine>
+	</LEDIC>
+	<ButtonIC  >
+		<ICName value="1717469021"> </ICName>
+		<X0 value="53"> </X0>
+		<Y0 value="552"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="标定1"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="25"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<Script  >
+		<ICName value="1717469142"> </ICName>
+		<Position value="142,209,360,407,32,32,25,0"> </Position>
+		<Parameter1 value="24,29,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+ 
+GWVI.WritePort 3,GWVI.ReadPort(2) 
+ 
+ 
+
+
+]]></script>
+	</Script>
+	<LabelIC  >
+		<ICName value="1717469305"> </ICName>
+		<X0 value="112"> </X0>
+		<Y0 value="424"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="-4078.359604"> </Caption>
+		<BGColor value="8421504"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="29"> </BusDataLine>
+		<Font value="14,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ButtonIC  >
+		<ICName value="1717469363"> </ICName>
+		<X0 value="168"> </X0>
+		<Y0 value="552"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="标定2"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="26"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<LabelIC  >
+		<ICName value="1717469379"> </ICName>
+		<X0 value="112"> </X0>
+		<Y0 value="454"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="-4178.416729"> </Caption>
+		<BGColor value="8421504"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="30"> </BusDataLine>
+		<Font value="14,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<Script  >
+		<ICName value="1717469387"> </ICName>
+		<Position value="141,245,265,465,32,32,26,0"> </Position>
+		<Parameter1 value="24,30,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+  
+ 
+GWVI.WritePort 3,GWVI.ReadPort(2) 
+ 
+ 
+ 
+ 
+
+
+]]></script>
+	</Script>
+	<EDITIC  >
+		<ICName value="1717469453"> </ICName>
+		<X0 value="42"> </X0>
+		<Y0 value="424"> </Y0>
+		<Width value="50"> </Width>
+		<High value="22"> </High>
+		<BusDataLine value="31"> </BusDataLine>
+		<ShowValue value="50"> </ShowValue>
+		<Font value="16,0,1"> </Font>
+	</EDITIC>
+	<EDITIC  >
+		<ICName value="1717469455"> </ICName>
+		<X0 value="43"> </X0>
+		<Y0 value="454"> </Y0>
+		<Width value="50"> </Width>
+		<High value="22"> </High>
+		<BusDataLine value="32"> </BusDataLine>
+		<ShowValue value="100"> </ShowValue>
+		<Font value="16,0,1"> </Font>
+	</EDITIC>
+	<ButtonIC  >
+		<ICName value="1717469502"> </ICName>
+		<X0 value="293"> </X0>
+		<Y0 value="552"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="标定结果"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="27"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<Script  >
+		<ICName value="1717469522"> </ICName>
+		<Position value="141,280,270,560,32,32,27,0"> </Position>
+		<Parameter1 value="31,32,29,30,33,34,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+Dim k,b 
+ 
+x1=GWVI.ReadPort(2) 
+ 
+x2=GWVI.ReadPort(3) 
+ 
+y1=GWVI.ReadPort(4) 
+ 
+y2=GWVI.ReadPort(5) 
+ 
+If x1=x2 Then 
+ 
+GWVI.WriteTextEx 450,300,255,16,"错误信息：请先标定!" 
+Else 
+ 
+k1=(y2-y1)/(x2-x1) 
+ 
+k=k1 
+ 
+b=y1-k*x1 
+ 
+GWVI.WritePort 6,k 
+ 
+GWVI.WritePort 7,b 
+ 
+ 
+End If 
+ 
+ 
+ 
+
+
+]]></script>
+	</Script>
+	<LabelIC  >
+		<ICName value="1717469632"> </ICName>
+		<X0 value="112"> </X0>
+		<Y0 value="483"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="-2.001143"> </Caption>
+		<BGColor value="8421504"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="33"> </BusDataLine>
+		<Font value="14,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717469637"> </ICName>
+		<X0 value="112"> </X0>
+		<Y0 value="511"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="-3978.302479"> </Caption>
+		<BGColor value="8421504"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="34"> </BusDataLine>
+		<Font value="14,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ButtonIC  >
+		<ICName value="1717469823"> </ICName>
+		<X0 value="508"> </X0>
+		<Y0 value="534"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="实测质量"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="28"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<Script  >
+		<ICName value="1717469844"> </ICName>
+		<Position value="177,280,783,308,32,32,28,0"> </Position>
+		<Parameter1 value="33,34,24,35,19,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[ Rem Write VBScript Codes Here  
+k=GWVI.ReadPort(2) 
+ 
+b=GWVI.ReadPort(3) 
+ 
+y=GWVI.ReadPort(4) 
+ 
+If k=0 Then 
+ 
+GWVI.WriteText 450,500,12,"请先标定！" 
+ 
+Else 
+ 
+x=(y-b)/k 
+End If 
+if x < 150 then 
+p = 0 
+else 
+p = Round((x-150)*0.58,2) 
+end if 
+x=Round(x/100,3) 
+GWVI.WritePort 5,x 
+ 
+GWVI.WritePort 6,p
+
+]]></script>
+	</Script>
+	<LabelIC  >
+		<ICName value="1717469908"> </ICName>
+		<X0 value="505"> </X0>
+		<Y0 value="458"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="2.074"> </Caption>
+		<BGColor value="14745599"> </BGColor>
+		<FGColor value="4194368"> </FGColor>
+		<BusDataLine value="35"> </BusDataLine>
+		<Font value="16,1,1,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ZLineIC  >
+		<ICName value="1717470575"> </ICName>
+		<Parameters value="24,1717468894,1,1717468786,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470597"> </ICName>
+		<Parameters value="25,1717469021,1,1717469142,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470601"> </ICName>
+		<Parameters value="26,1717469363,1,1717469387,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470604"> </ICName>
+		<Parameters value="27,1717469502,1,1717469522,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470606"> </ICName>
+		<Parameters value="28,1717469823,1,1717469844,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470620"> </ICName>
+		<Parameters value="24,1717468894,1,1717469142,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470624"> </ICName>
+		<Parameters value="24,1717468894,1,1717469387,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470635"> </ICName>
+		<Parameters value="29,1717469142,3,1717469305,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470647"> </ICName>
+		<Parameters value="30,1717469387,3,1717469379,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470667"> </ICName>
+		<Parameters value="31,1717469522,2,1717469453,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470675"> </ICName>
+		<Parameters value="32,1717469522,3,1717469455,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470680"> </ICName>
+		<Parameters value="29,1717469522,4,1717469305,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470685"> </ICName>
+		<Parameters value="30,1717469522,5,1717469379,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470693"> </ICName>
+		<Parameters value="33,1717469522,6,1717469632,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470699"> </ICName>
+		<Parameters value="34,1717469522,7,1717469637,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470716"> </ICName>
+		<Parameters value="33,1717469844,2,1717469632,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470719"> </ICName>
+		<Parameters value="34,1717469844,3,1717469637,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470724"> </ICName>
+		<Parameters value="24,1717469844,4,1717468894,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717470738"> </ICName>
+		<Parameters value="35,1717469844,5,1717469908,1,1337293"> </Parameters>
+	</ZLineIC>
+	<EDITIC  >
+		<ICName value="1717474858"> </ICName>
+		<X0 value="814"> </X0>
+		<Y0 value="171"> </Y0>
+		<Width value="120"> </Width>
+		<High value="28"> </High>
+		<BusDataLine value="10"> </BusDataLine>
+		<ShowValue value="8"> </ShowValue>
+		<Font value="22,0,1"> </Font>
+	</EDITIC>
+	<EDITIC  >
+		<ICName value="1717474860"> </ICName>
+		<X0 value="1144"> </X0>
+		<Y0 value="195"> </Y0>
+		<Width value="100"> </Width>
+		<High value="22"> </High>
+		<BusDataLine value="11"> </BusDataLine>
+		<ShowValue value="37"> </ShowValue>
+		<Font value="11,0,0"> </Font>
+	</EDITIC>
+	<LampIC  >
+		<ICName value="1717474871"> </ICName>
+		<X0 value="786"> </X0>
+		<Y0 value="214"> </Y0>
+		<Status0Color value="10"> </Status0Color>
+		<Status1Color value="14"> </Status1Color>
+		<Status2Color value="12"> </Status2Color>
+		<Size value="30"> </Size>
+		<Status value="0"> </Status>
+		<BusDataLine value="13"> </BusDataLine>
+		<Type value="0"> </Type>
+	</LampIC>
+	<ButtonIC  >
+		<ICName value="1717474883"> </ICName>
+		<X0 value="867"> </X0>
+		<Y0 value="296"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="复位"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="8"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<ButtonIC  >
+		<ICName value="1717474886"> </ICName>
+		<X0 value="1144"> </X0>
+		<Y0 value="233"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="复位2"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="9"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<Script  >
+		<ICName value="1717474942"> </ICName>
+		<Position value="830,294,477,358,32,32,8,0"> </Position>
+		<Parameter1 value="10,-1,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+gwvi.writeport 2,0 
+ 
+ 
+
+]]></script>
+	</Script>
+	<Script  >
+		<ICName value="1717474943"> </ICName>
+		<Position value="1136,289,519,438,32,32,9,0"> </Position>
+		<Parameter1 value="11,-1,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+gwvi.writeport 2,0 
+ 
+ 
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717474959"> </ICName>
+		<Parameters value="8,1717474883,1,1717474942,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717474961"> </ICName>
+		<Parameters value="9,1717474886,1,1717474943,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717474965"> </ICName>
+		<Parameters value="10,1717474942,2,1717474858,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717474968"> </ICName>
+		<Parameters value="11,1717474943,2,1717474860,1,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717475010"> </ICName>
+		<Position value="683,251,768,159,32,32,-1,0"> </Position>
+		<Parameter1 value="-1,12,21,13,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+ 
+dim data2(512) 
+ 
+gwvi.readportarray 3,512,data2 
+ 
+ 
+if data2(200)<4000 then 
+gwvi.writeport 5,2 
+gwvi.writeport 4,1250 
+GWVI.WriteTextEx 450,300,255,16,"铁磁性物体！" 
+else  
+gwvi.writeport 5,0 
+end if 
+ 
+
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717475059"> </ICName>
+		<Parameters value="12,1717468299,3,1717475010,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475063"> </ICName>
+		<Parameters value="13,1717475010,5,1717474871,1,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717475078"> </ICName>
+		<Position value="1013,279,668,511,32,32,-1,0"> </Position>
+		<Parameter1 value="14,12,15,10,11,16,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+dim data1(512) 
+dim data2(512) 
+dim value1 
+dim value2 
+dim flag 
+dim flag1 
+gwvi.readportarray 2,512,data1 
+gwvi.readportarray 3,512,data2 
+flag=gwvi.readport(4) 
+flag1=gwvi.readport(7) 
+value1=gwvi.readport(5) 
+value2=gwvi.readport(6) 
+if data1(0)<4000 and flag<>1 then 
+gwvi.writeport 5,value1+1 
+gwvi.writeport 4,1 
+else if data1(0)>4000 and flag=1 then 
+gwvi.writeport 4,0 
+end if 
+end if 
+if data2(0)<4000 and flag1<>1 then 
+gwvi.writeport 6,value2+1 
+gwvi.writeport 7,1 
+else if data2(0)>4000 and flag1=1 then 
+gwvi.writeport 7,0 
+end if 
+end if 
+ 
+ 
+
+]]></script>
+	</Script>
+	<OnOffButtonIC  >
+		<ICName value="1717475100"> </ICName>
+		<X0 value="1128"> </X0>
+		<Y0 value="342"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="On/Off"> </Caption>
+		<BGColor value="4"> </BGColor>
+		<FGColor value="14"> </FGColor>
+		<Value value="1"> </Value>
+		<BusDataLine value="15"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</OnOffButtonIC>
+	<OnOffButtonIC  >
+		<ICName value="1717475102"> </ICName>
+		<X0 value="1139"> </X0>
+		<Y0 value="386"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="On/Off"> </Caption>
+		<BGColor value="4"> </BGColor>
+		<FGColor value="14"> </FGColor>
+		<Value value="0"> </Value>
+		<BusDataLine value="16"> </BusDataLine>
+		<Font value="11,1,0,1"> </Font>
+	</OnOffButtonIC>
+	<ZLineIC  >
+		<ICName value="1717475125"> </ICName>
+		<Parameters value="14,1717468299,2,1717475078,2,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475132"> </ICName>
+		<Parameters value="12,1717468299,3,1717475078,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475152"> </ICName>
+		<Parameters value="15,1717475078,4,1717475100,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475155"> </ICName>
+		<Parameters value="16,1717475078,7,1717475102,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475170"> </ICName>
+		<Parameters value="10,1717475078,5,1717474858,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717475175"> </ICName>
+		<Parameters value="11,1717475078,6,1717474860,1,1337293"> </Parameters>
+	</ZLineIC>
+	<Script  >
+		<ICName value="1717475425"> </ICName>
+		<Position value="992,133,484,411,32,32,17,0"> </Position>
+		<Parameter1 value="-1,-1,-1,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+ 
+backcolor = GWVI.GetColor (230,250,250) 
+GWVI.FillRectangle 390,190,400,160,backcolor 
+GWVI.WriteTextEx 400,200,255,16,"设备信息：XX机场环形行李输送带" 
+GWVI.WriteTextEx 400,220,0,14,"设备功能：" 
+GWVI.WriteTextEx 400,240,0,14,"    物件计数：行李流量" 
+GWVI.WriteTextEx 400,260,0,14,"    铁磁性识别：大型铁磁性物品预警" 
+GWVI.WriteTextEx 400,280,0,14,"    传输速度：行李输送带速度显示" 
+GWVI.WriteTextEx 400,300,0,14,"    物件称重：托运计价" 
+GWVI.WriteTextEx 400,320,0,14,"    噪声测量：设备异响" 
+
+]]></script>
+	</Script>
+	<ButtonIC  >
+		<ICName value="1717475912"> </ICName>
+		<X0 value="984"> </X0>
+		<Y0 value="184"> </Y0>
+		<Width value="100"> </Width>
+		<High value="30"> </High>
+		<Caption value="帮助"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="8388608"> </FGColor>
+		<DrivenIC value=""> </DrivenIC>
+		<BusDataLine value="17"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+	</ButtonIC>
+	<ZLineIC  >
+		<ICName value="1717475924"> </ICName>
+		<Parameters value="17,1717475912,1,1717475425,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LampIC  >
+		<ICName value="1717476325"> </ICName>
+		<X0 value="611"> </X0>
+		<Y0 value="238"> </Y0>
+		<Status0Color value="10"> </Status0Color>
+		<Status1Color value="14"> </Status1Color>
+		<Status2Color value="12"> </Status2Color>
+		<Size value="30"> </Size>
+		<Status value="0"> </Status>
+		<BusDataLine value="18"> </BusDataLine>
+		<Type value="0"> </Type>
+	</LampIC>
+	<Script  >
+		<ICName value="1717476329"> </ICName>
+		<Position value="795,295,139,276,32,32,-1,0"> </Position>
+		<Parameter1 value="4,18,21,-1,-1,-1,-1,-1"> </Parameter1>
+		<script>
+<![CDATA[Rem Write VBScript Codes Here  
+v = GWVI.ReadPort(2) 
+if v > 80 then 
+GWVI.WritePort 3,2 
+GWVI.WritePort 4,1250 
+GWVI.WriteTextEx 450,300,255,16,"设备异响！" 
+else  
+GWVI.WritePort 3,0 
+end if
+]]></script>
+	</Script>
+	<ZLineIC  >
+		<ICName value="1717476336"> </ICName>
+		<Parameters value="18,1717476325,1,1717476329,3,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717476340"> </ICName>
+		<Parameters value="4,1717468307,3,1717476329,2,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1717476473"> </ICName>
+		<X0 value="505"> </X0>
+		<Y0 value="100"> </Y0>
+		<Width value="20"> </Width>
+		<High value="1"> </High>
+		<Caption value="33.32"> </Caption>
+		<BGColor value="14745599"> </BGColor>
+		<FGColor value="4194368"> </FGColor>
+		<BusDataLine value="19"> </BusDataLine>
+		<Font value="16,1,1,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ZLineIC  >
+		<ICName value="1717476629"> </ICName>
+		<Parameters value="19,1717469844,6,1717476473,1,1337293"> </Parameters>
+	</ZLineIC>
+	<SoundPlay  >
+		<ICName value="1717476695"> </ICName>
+		<Position value="801,564,822,413,32,32"> </Position>
+		<Parameter1 value="1,1024,20,-1,0"> </Parameter1>
+	</SoundPlay>
+	<GeneratorIC  >
+		<ICName value="1717476701"> </ICName>
+		<X0 value="763"> </X0>
+		<Y0 value="565"> </Y0>
+		<SignalType value="1"> </SignalType>
+		<SampleLen value="1024"> </SampleLen>
+		<SampleFre value="5120.000000"> </SampleFre>
+		<SignalAmplitude value="8000.000000"> </SignalAmplitude>
+		<Parameter1 value="1250.000000"> </Parameter1>
+		<Parameter2 value="210.000000"> </Parameter2>
+		<Parameter3 value="0.000000"> </Parameter3>
+		<BusWaveLine value="20"> </BusWaveLine>
+		<BusSignalTypeLine value="-1"> </BusSignalTypeLine>
+		<BusSampleLenLine value="-1"> </BusSampleLenLine>
+		<BusSampleFreLine value="-1"> </BusSampleFreLine>
+		<BusSignalAmpLine value="-1"> </BusSignalAmpLine>
+		<BusParameter1Line value="21"> </BusParameter1Line>
+		<BusParameter2Line value="-1"> </BusParameter2Line>
+		<BusParameter3Line value="-1"> </BusParameter3Line>
+		<BusSwitchLine value="-1"> </BusSwitchLine>
+		<SwitchStatus value="0"> </SwitchStatus>
+	</GeneratorIC>
+	<ZLineIC  >
+		<ICName value="1717476740"> </ICName>
+		<Parameters value="20,1717476701,1,1717476695,1,1337293"> </Parameters>
+	</ZLineIC>
+	<ZLineIC  >
+		<ICName value="1717476789"> </ICName>
+		<Parameters value="21,1717475010,4,1717476701,6,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1717477192"> </ICName>
+		<X0 value="260"> </X0>
+		<Y0 value="30"> </Y0>
+		<Width value="600"> </Width>
+		<High value="35"> </High>
+		<Caption value="XX机场环形行李输送带"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="28,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717477442"> </ICName>
+		<X0 value="605"> </X0>
+		<Y0 value="211"> </Y0>
+		<Width value="130"> </Width>
+		<High value="20"> </High>
+		<Caption value="设备异响报警灯"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="12,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717477568"> </ICName>
+		<X0 value="845"> </X0>
+		<Y0 value="234"> </Y0>
+		<Width value="110"> </Width>
+		<High value="20"> </High>
+		<Caption value="铁磁性物品报警"> </Caption>
+		<BGColor value="8454143"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="12,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717477651"> </ICName>
+		<X0 value="297"> </X0>
+		<Y0 value="212"> </Y0>
+		<Width value="130"> </Width>
+		<High value="20"> </High>
+		<Caption value="输送带速度"> </Caption>
+		<BGColor value="16777088"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="14,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717477702"> </ICName>
+		<X0 value="456"> </X0>
+		<Y0 value="212"> </Y0>
+		<Width value="130"> </Width>
+		<High value="20"> </High>
+		<Caption value="设备噪声"> </Caption>
+		<BGColor value="16777088"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="14,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717477767"> </ICName>
+		<X0 value="20"> </X0>
+		<Y0 value="72"> </Y0>
+		<Width value="1070"> </Width>
+		<High value="580"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717478269"> </ICName>
+		<X0 value="604"> </X0>
+		<Y0 value="458"> </Y0>
+		<Width value="30"> </Width>
+		<High value="18"> </High>
+		<Caption value="Kg"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717478292"> </ICName>
+		<X0 value="608"> </X0>
+		<Y0 value="496"> </Y0>
+		<Width value="30"> </Width>
+		<High value="18"> </High>
+		<Caption value="￥元"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="11,1,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717478436"> </ICName>
+		<X0 value="28090"> </X0>
+		<Y0 value="500"> </Y0>
+		<Width value="250"> </Width>
+		<High value="1"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717478534"> </ICName>
+		<X0 value="472"> </X0>
+		<Y0 value="123"> </Y0>
+		<Width value="150"> </Width>
+		<High value="30"> </High>
+		<Caption value="设备状态"> </Caption>
+		<BGColor value="12615808"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="18,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717478719"> </ICName>
+		<X0 value="280"> </X0>
+		<Y0 value="95"> </Y0>
+		<Width value="480"> </Width>
+		<High value="240"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<EdgeIC  >
+		<ICName value="1717478842"> </ICName>
+		<X0 value="775"> </X0>
+		<Y0 value="95"> </Y0>
+		<Width value="200"> </Width>
+		<High value="240"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717478968"> </ICName>
+		<X0 value="810"> </X0>
+		<Y0 value="123"> </Y0>
+		<Width value="120"> </Width>
+		<High value="30"> </High>
+		<Caption value="行李流量"> </Caption>
+		<BGColor value="12615808"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="18,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717479328"> </ICName>
+		<X0 value="29"> </X0>
+		<Y0 value="95"> </Y0>
+		<Width value="200"> </Width>
+		<High value="240"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717479396"> </ICName>
+		<X0 value="69"> </X0>
+		<Y0 value="123"> </Y0>
+		<Width value="120"> </Width>
+		<High value="30"> </High>
+		<Caption value="总控"> </Caption>
+		<BGColor value="12615808"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="18,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717479617"> </ICName>
+		<X0 value="29"> </X0>
+		<Y0 value="360"> </Y0>
+		<Width value="400"> </Width>
+		<High value="240"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717480085"> </ICName>
+		<X0 value="160"> </X0>
+		<Y0 value="382"> </Y0>
+		<Width value="150"> </Width>
+		<High value="30"> </High>
+		<Caption value="重量标准标定"> </Caption>
+		<BGColor value="12615808"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="18,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<EdgeIC  >
+		<ICName value="1717480177"> </ICName>
+		<X0 value="448"> </X0>
+		<Y0 value="360"> </Y0>
+		<Width value="300"> </Width>
+		<High value="240"> </High>
+		<LightColor value="16777215"> </LightColor>
+		<DarkColor value="0"> </DarkColor>
+		<LineWidth value="1"> </LineWidth>
+		<WidthOfEdge value="4"> </WidthOfEdge>
+		<Type value="2"> </Type>
+	</EdgeIC>
+	<LabelIC  >
+		<ICName value="1717480231"> </ICName>
+		<X0 value="530"> </X0>
+		<Y0 value="382"> </Y0>
+		<Width value="150"> </Width>
+		<High value="30"> </High>
+		<Caption value="行李称重计价"> </Caption>
+		<BGColor value="12615808"> </BGColor>
+		<FGColor value="14745599"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="18,1,0,1"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717480359"> </ICName>
+		<X0 value="506"> </X0>
+		<Y0 value="496"> </Y0>
+		<Width value="100"> </Width>
+		<High value="20"> </High>
+		<Caption value="33.32"> </Caption>
+		<BGColor value="14745599"> </BGColor>
+		<FGColor value="4194368"> </FGColor>
+		<BusDataLine value="19"> </BusDataLine>
+		<Font value="16,1,1,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ZLineIC  >
+		<ICName value="1717480396"> </ICName>
+		<Parameters value="19,1717469844,6,1717480359,1,1337293"> </Parameters>
+	</ZLineIC>
+	<LabelIC  >
+		<ICName value="1717480578"> </ICName>
+		<X0 value="840"> </X0>
+		<Y0 value="400"> </Y0>
+		<Width value="240"> </Width>
+		<High value="30"> </High>
+		<Caption value="设计人：张晓宇"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="16,0,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717480633"> </ICName>
+		<X0 value="840"> </X0>
+		<Y0 value="440"> </Y0>
+		<Width value="300"> </Width>
+		<High value="30"> </High>
+		<Caption value="班级：自动化2101"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="16,0,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<LabelIC  >
+		<ICName value="1717480683"> </ICName>
+		<X0 value="840"> </X0>
+		<Y0 value="480"> </Y0>
+		<Width value="250"> </Width>
+		<High value="20"> </High>
+		<Caption value="学号：2211410812"> </Caption>
+		<BGColor value="15790320"> </BGColor>
+		<FGColor value="0"> </FGColor>
+		<BusDataLine value="-1"> </BusDataLine>
+		<Font value="16,0,0,0"> </Font>
+		<Direction value="0"> </Direction>
+	</LabelIC>
+	<ZLineIC  >
+		<ICName value="1717480938"> </ICName>
+		<Parameters value="21,1717476329,4,1717476701,6,1337293"> </Parameters>
+	</ZLineIC>
+</DRVI4.1>
