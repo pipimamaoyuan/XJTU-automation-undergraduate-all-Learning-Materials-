@@ -1,0 +1,31 @@
+\contentsline {section}{\numberline {1}列举出至少5项国家已经建成的重大工程项目，简析其意义、价值、特点、现在运行效果和存在的问题}{1}{section.1}%
+\contentsline {subsection}{\numberline {1.1}三峡工程}{1}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}青藏铁路}{1}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}南水北调工程}{1}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}港珠澳大桥}{1}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}嫦娥探月工程}{2}{subsection.1.5}%
+\contentsline {section}{\numberline {2}以新冠为代表的突发公共卫生事件应急管理中，突发公共卫生事件应急管理措施与传播模型、机理之间的关系}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}应急管理措施}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}传播模型与机理}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}关系分析}{3}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}监测与预警 vs. 传播模型}{3}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}隔离与封锁 vs. 接触网络}{3}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}医疗资源调配 vs. SEIR模型}{4}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}疫苗接种 vs. R0值}{4}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}信息公开 vs. 社会行为改变}{4}{subsubsection.2.3.5}%
+\contentsline {section}{\numberline {3}当前中美关系对全球供应链体系的影响}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}贸易摩擦与关税}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}技术竞争与限制措施}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}地缘政治紧张局势}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}结论}{5}{subsection.3.4}%
+\contentsline {section}{\numberline {4}中国如何打造自主的供应设计软件和工业控制软件}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}现状与挑战}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}政策支持与发展策略}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}具体措施}{6}{subsection.4.3}%
+\contentsline {section}{\numberline {5}论述自动化（类）专业学生在未来国家经济、国防和社会发展中的优势地位}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}典型非技术系统的特点}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}自动化专业的核心能力}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}新需求背景下的优势}{7}{subsection.5.3}%
+\contentsline {section}{\numberline {6}戴明质量管理十四条的分析与评价}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}分析}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}评价}{8}{subsection.6.2}%
